@@ -3,7 +3,6 @@ package caida
 import (
 	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -16,7 +15,7 @@ type RelationshipCounts struct {
 }
 
 func ParseRelationships(path string) (map[uint32]RelationshipCounts, error) {
-	f, err := os.Open(path)
+	f, err := openMaybeCompressed(path)
 	if err != nil {
 		return nil, err
 	}

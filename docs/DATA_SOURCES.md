@@ -12,7 +12,12 @@ ASN signal enrichment uses static raw CSV outputs from IP-Knowledge-Layer and AS
 
 GeoFeed-Harvester is intentionally not merged into ASNForge v0.1 outputs. Geofeed data describes prefix geolocation assertions, while ASNForge uses `registration_country` for RIR allocation country and avoids mixing allocation country with geolocation. Geofeed ingestion belongs in a separate GeoIP/geofeed artifact family unless a future schema adds explicit geofeed fields.
 
-The `research-caida` profile supports CAIDA ASRank, AS2Org, and AS relationships bulk files from local paths or explicitly configured URLs. ASNForge does not crawl ASRank APIs. CAIDA-derived fields are optional ASN-table enrichment fields and are not included in MMDB records.
+The `research-caida` profile supports CAIDA ASRank, AS2Org, and AS relationships bulk files from local paths or explicitly configured URLs. The default research config uses:
+
+- `https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz`
+- `https://publicdata.caida.org/datasets/as-relationships/serial-2/20260501.as-rel2.txt.bz2`
+
+ASNForge does not crawl ASRank APIs. If ASRank is needed, provide an operator-managed CSV file through `asrank_paths` or `asrank_urls`. CAIDA-derived fields are optional ASN-table enrichment fields and are not included in MMDB records.
 
 The deterministic normalized fixture is scoped to `config/local-dev.yaml`. The public-safe profile uses the bgp.tools bulk table and ASN catalog exports, plus static ipanalytics signal CSVs, and sets an identifying HTTP User-Agent.
 

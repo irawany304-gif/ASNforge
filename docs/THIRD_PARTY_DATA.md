@@ -9,3 +9,5 @@ The v0.1 public-safe profile uses RIR delegated stats, the bgp.tools bulk table 
 The default profile avoids CAIDA by default. Optional research profiles may have additional restrictions and should be documented before publication.
 
 `config/research-caida.yaml` is intentionally separate from `public-safe`. CAIDA datasets are governed by CAIDA acceptable-use, citation, and redistribution terms. Operators should configure CAIDA file paths or URLs only after confirming they may use and redistribute the generated artifacts for their deployment.
+
+The `release-caida` GitHub Actions workflow is manual and publishes prereleases. Review CAIDA terms before enabling it for public distribution.

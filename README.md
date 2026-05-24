@@ -273,6 +273,16 @@ The public-safe profile downloads `https://bgp.tools/table.jsonl` for production
 
 The research CAIDA profile is separate because CAIDA datasets have their own acceptable-use, citation, and redistribution terms. CAIDA fields are written to the ASN JSONL/CSV artifacts and are intentionally excluded from the compact MMDB.
 
+Default CAIDA research inputs:
+
+| Dataset | File |
+| --- | --- |
+| AS2Org | `https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz` |
+| AS relationships | `https://publicdata.caida.org/datasets/as-relationships/serial-2/20260501.as-rel2.txt.bz2` |
+| ASRank | Operator-provided CSV path or URL; ASRank API crawling is not used |
+
+The repository includes a manual `release-caida` workflow that publishes a prerelease tagged `research-caida-YYYYMMDD-HHMMSSZ`.
+
 The v0.1 public-safe profile does not include CAIDA data by default. Optional PeeringDB, CAIDA, RPKI, and native MRT support are tracked as later source profiles and parser extensions.
 
 ## Use Cases

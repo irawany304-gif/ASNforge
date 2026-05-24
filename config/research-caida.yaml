@@ -33,14 +33,17 @@ sources:
       - "https://raw.githubusercontent.com/ipanalytics/ASN-Signal-Graph/main/data/current/asn-signals.csv"
   caida:
     enabled: true
-    # CAIDA datasets are public but governed by CAIDA AUA citation/reporting terms.
-    # Fill these with files you are allowed to redistribute or paths in your cache.
-    # ASRank API bulk crawling is intentionally not used here.
+    # CAIDA datasets are governed by CAIDA AUA citation/reporting terms.
+    # This profile uses bulk/static files only. ASRank API crawling is intentionally not used.
     asrank_urls: []
     asrank_paths: []
-    as2org_urls: []
+    as2org_urls:
+      - "https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz"
     as2org_paths: []
-    relationship_urls: []
+    # Use serial-2 by default. Do not also include serial-1 unless you intentionally
+    # want to compare relationship inference versions; including both double-counts.
+    relationship_urls:
+      - "https://publicdata.caida.org/datasets/as-relationships/serial-2/20260501.as-rel2.txt.bz2"
     relationship_paths: []
 overrides:
   path: examples/overrides.yaml

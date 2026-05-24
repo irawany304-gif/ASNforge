@@ -3,7 +3,6 @@ package caida
 import (
 	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -18,7 +17,7 @@ type AS2OrgRecord struct {
 }
 
 func ParseAS2Org(path string) ([]AS2OrgRecord, error) {
-	f, err := os.Open(path)
+	f, err := openMaybeCompressed(path)
 	if err != nil {
 		return nil, err
 	}

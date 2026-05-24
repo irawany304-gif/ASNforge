@@ -4,7 +4,6 @@ import (
 	"encoding/csv"
 	"fmt"
 	"io"
-	"os"
 	"strconv"
 	"strings"
 )
@@ -21,7 +20,7 @@ type ASRankRecord struct {
 }
 
 func ParseASRankCSV(path string) ([]ASRankRecord, error) {
-	f, err := os.Open(path)
+	f, err := openMaybeCompressed(path)
 	if err != nil {
 		return nil, err
 	}
