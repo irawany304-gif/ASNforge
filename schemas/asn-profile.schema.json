@@ -19,8 +19,19 @@
     "field_sources": {"type": "object"},
     "private_asn": {"type": "boolean"},
     "reserved_asn": {"type": "boolean"},
+    "as_org_id": {"type": "string"},
+    "as_org_name": {"type": "string"},
+    "caida_rank": {"type": "integer", "minimum": 0},
+    "caida_customer_cone_asns": {"type": "integer", "minimum": 0},
+    "caida_customer_cone_prefixes": {"type": "integer", "minimum": 0},
+    "caida_customer_cone_addresses": {"type": "integer", "minimum": 0},
+    "caida_degree_peers": {"type": "integer", "minimum": 0},
+    "caida_degree_customers": {"type": "integer", "minimum": 0},
+    "caida_degree_providers": {"type": "integer", "minimum": 0},
+    "caida_peer_count": {"type": "integer", "minimum": 0},
+    "caida_customer_count": {"type": "integer", "minimum": 0},
+    "caida_provider_count": {"type": "integer", "minimum": 0},
     "source_updated_at": {"type": "string"},
     "generated_at": {"type": "string"}
   }
 }
-

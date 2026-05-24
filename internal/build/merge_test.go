@@ -17,3 +17,14 @@ func TestApplyCatalogAndNameHeuristics(t *testing.T) {
 		t.Fatalf("unexpected profile: %+v", got)
 	}
 }
+
+func TestApplySignals(t *testing.T) {
+	profiles := map[uint32]asn.Profile{
+		13335: {ASN: 13335, ASNType: asn.TypeUnknown, FieldSources: map[string][]string{}},
+	}
+	ApplySignals([]asn.SignalRecord{{ASN: 13335, ASNName: "Cloudflare, Inc.", ASNType: asn.TypeCDN, Tags: []string{"cdn", "security"}, Confidence: 85, Source: "test-signals"}}, profiles, "s", "b", "g")
+	got := profiles[13335]
+	if got.ASNType != asn.TypeCDN || got.ASNConfidence != 85 || len(got.ASNTags) != 2 {
+		t.Fatalf("unexpected profile: %+v", got)
+	}
+}

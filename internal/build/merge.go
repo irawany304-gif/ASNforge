@@ -96,6 +96,109 @@ func ApplyCatalog(records []asn.CatalogRecord, profiles map[uint32]asn.Profile, 
 	}
 }
 
+func ApplySignals(records []asn.SignalRecord, profiles map[uint32]asn.Profile, schema, buildID, generatedAt string) {
+	for _, rec := range records {
+		p := profiles[rec.ASN]
+		if p.ASN == 0 {
+			p.SchemaVersion = schema
+			p.BuildID = buildID
+			p.ASN = rec.ASN
+			p.ASNType = asn.TypeUnknown
+			p.ASNConfidence = 30
+			p.PrivateASN = asn.IsPrivate(rec.ASN)
+			p.ReservedASN = asn.IsReserved(rec.ASN)
+			p.GeneratedAt = generatedAt
+		}
+		if p.FieldSources == nil {
+			p.FieldSources = map[string][]string{}
+		}
+		if p.ASNName == "" && rec.ASNName != "" {
+			p.ASNName = rec.ASNName
+			p.ASNOrg = rec.ASNName
+			p.FieldSources["asn_name"] = appendSource(p.FieldSources["asn_name"], rec.Source)
+			p.FieldSources["asn_org"] = appendSource(p.FieldSources["asn_org"], rec.Source)
+		}
+		if p.ASNType == asn.TypeUnknown && rec.ASNType != "" && rec.ASNType != asn.TypeUnknown {
+			p.ASNType = rec.ASNType
+			p.FieldSources["asn_type"] = appendSource(p.FieldSources["asn_type"], rec.Source)
+		}
+		if len(rec.Tags) > 0 {
+			p.ASNTags = asn.NormalizeTags(append(p.ASNTags, rec.Tags...))
+			p.FieldSources["asn_tags"] = appendSource(p.FieldSources["asn_tags"], rec.Source)
+		}
+		if rec.Confidence > p.ASNConfidence {
+			p.ASNConfidence = rec.Confidence
+		}
+		profiles[rec.ASN] = p
+	}
+}
+
+func ApplyCAIDA(data caidaData, profiles map[uint32]asn.Profile, schema, buildID, generatedAt string) {
+	for _, rec := range data.as2org {
+		p := ensureProfile(profiles, rec.ASN, schema, buildID, generatedAt)
+		if p.FieldSources == nil {
+			p.FieldSources = map[string][]string{}
+		}
+		if p.ASNName == "" && rec.ASNName != "" {
+			p.ASNName = rec.ASNName
+			p.FieldSources["asn_name"] = appendSource(p.FieldSources["asn_name"], "caida-as2org")
+		}
+		if p.ASNOrg == "" && rec.OrgName != "" {
+			p.ASNOrg = rec.OrgName
+			p.FieldSources["asn_org"] = appendSource(p.FieldSources["asn_org"], "caida-as2org")
+		}
+		p.ASOrgID = rec.OrgID
+		p.ASOrgName = rec.OrgName
+		p.FieldSources["as_org_id"] = appendSource(p.FieldSources["as_org_id"], "caida-as2org")
+		p.FieldSources["as_org_name"] = appendSource(p.FieldSources["as_org_name"], "caida-as2org")
+		profiles[rec.ASN] = p
+	}
+	for _, rec := range data.asrank {
+		p := ensureProfile(profiles, rec.ASN, schema, buildID, generatedAt)
+		if p.FieldSources == nil {
+			p.FieldSources = map[string][]string{}
+		}
+		p.CAIDARank = rec.Rank
+		p.CAIDAConeASNs = rec.ConeASNs
+		p.CAIDAConePrefixes = rec.ConePrefixes
+		p.CAIDAConeAddresses = rec.ConeAddresses
+		p.CAIDADegreePeers = rec.DegreePeers
+		p.CAIDADegreeCustomers = rec.DegreeCustomers
+		p.CAIDADegreeProviders = rec.DegreeProviders
+		p.FieldSources["caida_rank"] = appendSource(p.FieldSources["caida_rank"], "caida-asrank")
+		profiles[rec.ASN] = p
+	}
+	for asnID, rec := range data.relationships {
+		p := ensureProfile(profiles, asnID, schema, buildID, generatedAt)
+		if p.FieldSources == nil {
+			p.FieldSources = map[string][]string{}
+		}
+		p.CAIDAPeerCount = rec.Peers
+		p.CAIDACustomerCount = rec.Customers
+		p.CAIDAProviderCount = rec.Providers
+		p.FieldSources["caida_relationships"] = appendSource(p.FieldSources["caida_relationships"], "caida-as-relationships")
+		if p.ASNType == asn.TypeUnknown && rec.Customers >= 100 {
+			p.ASNType = asn.TypeTransit
+			p.ASNTags = asn.NormalizeTags(append(p.ASNTags, "transit", "backbone"))
+			p.FieldSources["asn_type"] = appendSource(p.FieldSources["asn_type"], "caida-as-relationships")
+			p.FieldSources["asn_tags"] = appendSource(p.FieldSources["asn_tags"], "caida-as-relationships")
+		}
+		profiles[asnID] = p
+	}
+}
+
+func ensureProfile(profiles map[uint32]asn.Profile, id uint32, schema, buildID, generatedAt string) asn.Profile {
+	p := profiles[id]
+	if p.ASN != 0 {
+		return p
+	}
+	return asn.Profile{
+		SchemaVersion: schema, BuildID: buildID, ASN: id, ASNType: asn.TypeUnknown,
+		ASNConfidence: 30, FieldSources: map[string][]string{},
+		PrivateASN: asn.IsPrivate(id), ReservedASN: asn.IsReserved(id), GeneratedAt: generatedAt,
+	}
+}
+
 func appendSource(existing []string, source string) []string {
 	for _, v := range existing {
 		if v == source {

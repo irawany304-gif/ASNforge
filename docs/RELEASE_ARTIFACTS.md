@@ -4,6 +4,8 @@
 
 `asnforge-asn.jsonl` / `.csv`: canonical ASN profile table for direct ASN lookup and joins.
 
+When built with `config/research-caida.yaml`, ASN profile rows may include optional CAIDA fields such as `as_org_id`, `as_org_name`, `caida_rank`, customer cone metrics, degree metrics, and relationship counts. These fields are intentionally kept out of the compact MMDB.
+
 `asnforge-prefixes.jsonl` / `.csv`: canonical prefix-origin snapshot with origin ASN arrays, selected-origin policy, MOAS, collectors, and prefix confidence.
 
 `.gz` files: compressed release assets.
@@ -17,4 +19,3 @@
 `asnforge-diff.json`: v0.1 baseline or previous-release diff shape.
 
 `manifest.json`: machine-readable artifact list.
-

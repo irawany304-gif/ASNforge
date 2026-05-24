@@ -1,0 +1,4 @@
+prefix,layer,provider,service,region,country,asn,asn_name,tags,confidence,source_id,source_url,source_type,updated_at
+8.8.8.0/24,hosting-cloud,Google,DNS,,US,15169,Google LLC,cloud;dns,0.99,google-public-dns,https://example.invalid,derived_project,2026-05-24T00:00:00Z
+1.1.1.0/24,hosting-cloud,Cloudflare,edge,,US,13335,"Cloudflare, Inc.",cdn;dns;security,0.99,cloudflare,https://example.invalid,derived_project,2026-05-24T00:00:00Z
+203.0.113.1/32,anonymity,Tor,middle,,ZZ,64512,Documentation Private ASN,tor;anonymity-network,0.90,tor-radar,https://example.invalid,derived_project,2026-05-24T00:00:00Z

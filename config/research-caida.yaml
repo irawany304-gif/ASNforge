@@ -1,10 +1,10 @@
-profile: public-safe
+profile: research-caida
 schema_version: asnforge.v0.1
 private_asn_policy: flag
 moas_policy: mark_ambiguous
 compression: true
 max_mmdb_size_mb: 256
-source_timeout: 60s
+source_timeout: 120s
 sources:
   rir:
     enabled: true
@@ -31,6 +31,17 @@ sources:
     urls:
       - "https://raw.githubusercontent.com/ipanalytics/IP-Knowledge-Layer/main/data/current/asn-signals.csv"
       - "https://raw.githubusercontent.com/ipanalytics/ASN-Signal-Graph/main/data/current/asn-signals.csv"
+  caida:
+    enabled: true
+    # CAIDA datasets are public but governed by CAIDA AUA citation/reporting terms.
+    # Fill these with files you are allowed to redistribute or paths in your cache.
+    # ASRank API bulk crawling is intentionally not used here.
+    asrank_urls: []
+    asrank_paths: []
+    as2org_urls: []
+    as2org_paths: []
+    relationship_urls: []
+    relationship_paths: []
 overrides:
   path: examples/overrides.yaml
 smoke:

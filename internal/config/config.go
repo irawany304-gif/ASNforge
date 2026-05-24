@@ -36,6 +36,20 @@ type Config struct {
 			URLs    []string `yaml:"urls"`
 			Paths   []string `yaml:"paths"`
 		} `yaml:"asn_catalog"`
+		ASNSignals struct {
+			Enabled bool     `yaml:"enabled"`
+			URLs    []string `yaml:"urls"`
+			Paths   []string `yaml:"paths"`
+		} `yaml:"asn_signals"`
+		CAIDA struct {
+			Enabled       bool     `yaml:"enabled"`
+			ASRankURLs    []string `yaml:"asrank_urls"`
+			ASRankPaths   []string `yaml:"asrank_paths"`
+			AS2OrgURLs    []string `yaml:"as2org_urls"`
+			AS2OrgPaths   []string `yaml:"as2org_paths"`
+			RelationURLs  []string `yaml:"relationship_urls"`
+			RelationPaths []string `yaml:"relationship_paths"`
+		} `yaml:"caida"`
 	} `yaml:"sources"`
 	Overrides struct {
 		Path string `yaml:"path"`

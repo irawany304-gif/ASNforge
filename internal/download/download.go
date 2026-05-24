@@ -2,6 +2,8 @@ package download
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"net/http"
@@ -50,6 +52,7 @@ func Download(ctx context.Context, cacheDir, group, raw string) (SourceFile, err
 	if name == "." || name == "/" || name == "" {
 		name = group + ".dat"
 	}
+	name = urlCacheName(raw, name)
 	dir := filepath.Join(cacheDir, group)
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return SourceFile{}, err
@@ -89,4 +92,9 @@ func Download(ctx context.Context, cacheDir, group, raw string) (SourceFile, err
 		return SourceFile{}, err
 	}
 	return SourceFile{Name: name, URL: raw, LocalPath: local, SHA256: sum, SizeBytes: size, DownloadedAt: time.Now().UTC().Format(time.RFC3339)}, nil
+}
+
+func urlCacheName(raw, base string) string {
+	sum := sha256.Sum256([]byte(raw))
+	return hex.EncodeToString(sum[:])[:12] + "-" + base
 }

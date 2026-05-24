@@ -1,4 +1,4 @@
-profile: local-dev
+profile: research-caida
 schema_version: asnforge.v0.1
 private_asn_policy: flag
 moas_policy: most_observed
@@ -30,6 +30,14 @@ sources:
     paths:
       - examples/testdata/asn/ip-knowledge-signals.csv
       - examples/testdata/asn/asn-signal-graph.csv
+  caida:
+    enabled: true
+    asrank_paths:
+      - examples/testdata/caida/asrank.csv
+    as2org_paths:
+      - examples/testdata/caida/as-org2info.txt
+    relationship_paths:
+      - examples/testdata/caida/as-rel.txt
 overrides:
   path: examples/overrides.yaml
 smoke:

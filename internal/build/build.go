@@ -12,6 +12,7 @@ import (
 
 	"github.com/ipanalytics/ASNforge/internal/asn"
 	"github.com/ipanalytics/ASNforge/internal/bgp"
+	"github.com/ipanalytics/ASNforge/internal/caida"
 	"github.com/ipanalytics/ASNforge/internal/config"
 	"github.com/ipanalytics/ASNforge/internal/download"
 	"github.com/ipanalytics/ASNforge/internal/mmdb"
@@ -60,10 +61,10 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 	fmt.Fprintln(os.Stderr, "asnforge: parsing RIR delegated data")
 	var allocs []rir.ASNAllocation
 	for _, sf := range sources {
-		if sf.Name == "bgp" || sf.Name == "asn_catalog" || filepath.Base(filepath.Dir(sf.LocalPath)) == "bgp" {
+		if sf.Name == "bgp" || sf.Name == "asn_catalog" || sf.Name == "asn_signals" || filepath.Base(filepath.Dir(sf.LocalPath)) == "bgp" {
 			continue
 		}
-		if looksLikeBGP(sf.LocalPath) || looksLikeASNCatalog(sf) {
+		if looksLikeBGP(sf.LocalPath) || looksLikeASNCatalog(sf) || looksLikeASNSignal(sf) {
 			continue
 		}
 		got, err := rir.ParseDelegatedFile(sf.LocalPath)
@@ -80,6 +81,18 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 		return Metadata{}, err
 	}
 	ApplyCatalog(catalogRecords, profileMap, opts.SchemaVersion, opts.BuildID, generatedAt)
+	fmt.Fprintln(os.Stderr, "asnforge: parsing ASN signal data")
+	signalRecords, err := parseASNSignals(sources)
+	if err != nil {
+		return Metadata{}, err
+	}
+	ApplySignals(signalRecords, profileMap, opts.SchemaVersion, opts.BuildID, generatedAt)
+	fmt.Fprintln(os.Stderr, "asnforge: parsing CAIDA research data")
+	caidaData, err := parseCAIDAData(sources)
+	if err != nil {
+		return Metadata{}, err
+	}
+	ApplyCAIDA(caidaData, profileMap, opts.SchemaVersion, opts.BuildID, generatedAt)
 
 	fmt.Fprintln(os.Stderr, "asnforge: parsing prefix-origin observations")
 	var observations []bgp.PrefixOriginObservation
@@ -197,6 +210,18 @@ func validateSourceProfile(cfg config.Config) error {
 			return fmt.Errorf("public-safe profile must not use deterministic testdata path %q", path)
 		}
 	}
+	for _, path := range cfg.Sources.ASNCatalog.Paths {
+		clean := filepath.ToSlash(path)
+		if strings.Contains(clean, "examples/testdata/") {
+			return fmt.Errorf("public-safe profile must not use deterministic ASN catalog testdata path %q", path)
+		}
+	}
+	for _, path := range cfg.Sources.ASNSignals.Paths {
+		clean := filepath.ToSlash(path)
+		if strings.Contains(clean, "examples/testdata/") {
+			return fmt.Errorf("public-safe profile must not use deterministic ASN signal testdata path %q", path)
+		}
+	}
 	return nil
 }
 
@@ -242,6 +267,25 @@ func collectSources(ctx context.Context, cfg config.Config, opts config.Options)
 			catalogs[i].Name = "asn_catalog"
 		}
 		out = append(out, catalogs...)
+		signals, err := download.DownloadAll(ctx, opts.CacheDir, "asn_signals", cfg.Sources.ASNSignals.URLs)
+		if err != nil {
+			return nil, err
+		}
+		for i := range signals {
+			signals[i].Name = "asn_signals"
+		}
+		out = append(out, signals...)
+		caidaURLs := append([]string{}, cfg.Sources.CAIDA.ASRankURLs...)
+		caidaURLs = append(caidaURLs, cfg.Sources.CAIDA.AS2OrgURLs...)
+		caidaURLs = append(caidaURLs, cfg.Sources.CAIDA.RelationURLs...)
+		caidaFiles, err := download.DownloadAll(ctx, opts.CacheDir, "caida", caidaURLs)
+		if err != nil {
+			return nil, err
+		}
+		for i := range caidaFiles {
+			caidaFiles[i].Name = caidaSourceName(caidaFiles[i].LocalPath)
+		}
+		out = append(out, caidaFiles...)
 	}
 	for _, p := range cfg.Sources.BGP.Paths {
 		sf, err := download.LocalSourceFile(p)
@@ -257,6 +301,38 @@ func collectSources(ctx context.Context, cfg config.Config, opts config.Options)
 			return nil, err
 		}
 		sf.Name = "asn_catalog"
+		out = append(out, sf)
+	}
+	for _, p := range cfg.Sources.ASNSignals.Paths {
+		sf, err := download.LocalSourceFile(p)
+		if err != nil {
+			return nil, err
+		}
+		sf.Name = "asn_signals"
+		out = append(out, sf)
+	}
+	for _, p := range cfg.Sources.CAIDA.ASRankPaths {
+		sf, err := download.LocalSourceFile(p)
+		if err != nil {
+			return nil, err
+		}
+		sf.Name = "caida_asrank"
+		out = append(out, sf)
+	}
+	for _, p := range cfg.Sources.CAIDA.AS2OrgPaths {
+		sf, err := download.LocalSourceFile(p)
+		if err != nil {
+			return nil, err
+		}
+		sf.Name = "caida_as2org"
+		out = append(out, sf)
+	}
+	for _, p := range cfg.Sources.CAIDA.RelationPaths {
+		sf, err := download.LocalSourceFile(p)
+		if err != nil {
+			return nil, err
+		}
+		sf.Name = "caida_relationships"
 		out = append(out, sf)
 	}
 	return out, nil
@@ -275,6 +351,14 @@ func looksLikeASNCatalog(sf download.SourceFile) bool {
 	return base == "asns.csv" || filepath.Base(filepath.Dir(sf.LocalPath)) == "asn_catalog"
 }
 
+func looksLikeASNSignal(sf download.SourceFile) bool {
+	if sf.Name == "asn_signals" {
+		return true
+	}
+	base := filepath.Base(sf.LocalPath)
+	return base == "asn-signals.csv" || strings.Contains(filepath.ToSlash(sf.LocalPath), "/asn_signals/")
+}
+
 func parseASNCatalogs(sources []download.SourceFile) ([]asn.CatalogRecord, error) {
 	var out []asn.CatalogRecord
 	for _, sf := range sources {
@@ -288,6 +372,69 @@ func parseASNCatalogs(sources []download.SourceFile) ([]asn.CatalogRecord, error
 		out = append(out, rows...)
 	}
 	return out, nil
+}
+
+func parseASNSignals(sources []download.SourceFile) ([]asn.SignalRecord, error) {
+	var out []asn.SignalRecord
+	for _, sf := range sources {
+		if !looksLikeASNSignal(sf) {
+			continue
+		}
+		rows, err := asn.ParseSignalCSV(sf.LocalPath)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, rows...)
+	}
+	return out, nil
+}
+
+type caidaData struct {
+	asrank        []caida.ASRankRecord
+	as2org        []caida.AS2OrgRecord
+	relationships map[uint32]caida.RelationshipCounts
+}
+
+func parseCAIDAData(sources []download.SourceFile) (caidaData, error) {
+	var out caidaData
+	out.relationships = map[uint32]caida.RelationshipCounts{}
+	for _, sf := range sources {
+		switch sf.Name {
+		case "caida_asrank":
+			rows, err := caida.ParseASRankCSV(sf.LocalPath)
+			if err != nil {
+				return out, err
+			}
+			out.asrank = append(out.asrank, rows...)
+		case "caida_as2org":
+			rows, err := caida.ParseAS2Org(sf.LocalPath)
+			if err != nil {
+				return out, err
+			}
+			out.as2org = append(out.as2org, rows...)
+		case "caida_relationships":
+			rows, err := caida.ParseRelationships(sf.LocalPath)
+			if err != nil {
+				return out, err
+			}
+			for asnID, counts := range rows {
+				out.relationships[asnID] = counts
+			}
+		}
+	}
+	return out, nil
+}
+
+func caidaSourceName(path string) string {
+	base := strings.ToLower(filepath.Base(path))
+	switch {
+	case strings.Contains(base, "asrank") || strings.Contains(base, "rank"):
+		return "caida_asrank"
+	case strings.Contains(base, "as-org") || strings.Contains(base, "as2org") || strings.Contains(base, "org2info"):
+		return "caida_as2org"
+	default:
+		return "caida_relationships"
+	}
 }
 
 func originSet(prefixes []bgp.PrefixOrigin) []uint32 {
