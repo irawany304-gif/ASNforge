@@ -42,13 +42,14 @@ type Config struct {
 			Paths   []string `yaml:"paths"`
 		} `yaml:"asn_signals"`
 		CAIDA struct {
-			Enabled       bool     `yaml:"enabled"`
-			ASRankURLs    []string `yaml:"asrank_urls"`
-			ASRankPaths   []string `yaml:"asrank_paths"`
-			AS2OrgURLs    []string `yaml:"as2org_urls"`
-			AS2OrgPaths   []string `yaml:"as2org_paths"`
-			RelationURLs  []string `yaml:"relationship_urls"`
-			RelationPaths []string `yaml:"relationship_paths"`
+			Enabled               bool     `yaml:"enabled"`
+			ASRankURLs            []string `yaml:"asrank_urls"`
+			ASRankPaths           []string `yaml:"asrank_paths"`
+			AS2OrgURLs            []string `yaml:"as2org_urls"`
+			AS2OrgPaths           []string `yaml:"as2org_paths"`
+			RelationURLs          []string `yaml:"relationship_urls"`
+			RelationPaths         []string `yaml:"relationship_paths"`
+			RelationLatestSerial2 bool     `yaml:"relationship_latest_serial2"`
 		} `yaml:"caida"`
 	} `yaml:"sources"`
 	Overrides struct {

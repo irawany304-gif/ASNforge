@@ -278,10 +278,10 @@ Default CAIDA research inputs:
 | Dataset | File |
 | --- | --- |
 | AS2Org | `https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz` |
-| AS relationships | `https://publicdata.caida.org/datasets/as-relationships/serial-2/20260501.as-rel2.txt.bz2` |
+| AS relationships | Latest `*.as-rel2.txt.bz2` resolved from `https://publicdata.caida.org/datasets/as-relationships/serial-2/` |
 | ASRank | Operator-provided CSV path or URL; ASRank API crawling is not used |
 
-The repository includes a manual `release-caida` workflow that publishes a prerelease tagged `research-caida-YYYYMMDD-HHMMSSZ`.
+The repository includes a monthly/manual `release-caida` workflow that publishes a prerelease tagged `research-caida-YYYYMMDD-HHMMSSZ`.
 
 The v0.1 public-safe profile does not include CAIDA data by default. Optional PeeringDB, CAIDA, RPKI, and native MRT support are tracked as later source profiles and parser extensions.
 

@@ -15,7 +15,7 @@ GeoFeed-Harvester is intentionally not merged into ASNForge v0.1 outputs. Geofee
 The `research-caida` profile supports CAIDA ASRank, AS2Org, and AS relationships bulk files from local paths or explicitly configured URLs. The default research config uses:
 
 - `https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz`
-- `https://publicdata.caida.org/datasets/as-relationships/serial-2/20260501.as-rel2.txt.bz2`
+- the latest `*.as-rel2.txt.bz2` file resolved from `https://publicdata.caida.org/datasets/as-relationships/serial-2/`
 
 ASNForge does not crawl ASRank APIs. If ASRank is needed, provide an operator-managed CSV file through `asrank_paths` or `asrank_urls`. CAIDA-derived fields are optional ASN-table enrichment fields and are not included in MMDB records.
 

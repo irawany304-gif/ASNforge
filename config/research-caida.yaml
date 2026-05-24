@@ -40,10 +40,10 @@ sources:
     as2org_urls:
       - "https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz"
     as2org_paths: []
-    # Use serial-2 by default. Do not also include serial-1 unless you intentionally
+    # Use latest serial-2 by default. Do not also include serial-1 unless you intentionally
     # want to compare relationship inference versions; including both double-counts.
-    relationship_urls:
-      - "https://publicdata.caida.org/datasets/as-relationships/serial-2/20260501.as-rel2.txt.bz2"
+    relationship_latest_serial2: true
+    relationship_urls: []
     relationship_paths: []
 overrides:
   path: examples/overrides.yaml

@@ -4,8 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -278,6 +281,13 @@ func collectSources(ctx context.Context, cfg config.Config, opts config.Options)
 		caidaURLs := append([]string{}, cfg.Sources.CAIDA.ASRankURLs...)
 		caidaURLs = append(caidaURLs, cfg.Sources.CAIDA.AS2OrgURLs...)
 		caidaURLs = append(caidaURLs, cfg.Sources.CAIDA.RelationURLs...)
+		if cfg.Sources.CAIDA.RelationLatestSerial2 {
+			latest, err := latestCAIDASerial2URL(ctx)
+			if err != nil {
+				return nil, err
+			}
+			caidaURLs = append(caidaURLs, latest)
+		}
 		caidaFiles, err := download.DownloadAll(ctx, opts.CacheDir, "caida", caidaURLs)
 		if err != nil {
 			return nil, err
@@ -336,6 +346,34 @@ func collectSources(ctx context.Context, cfg config.Config, opts config.Options)
 		out = append(out, sf)
 	}
 	return out, nil
+}
+
+func latestCAIDASerial2URL(ctx context.Context) (string, error) {
+	const base = "https://publicdata.caida.org/datasets/as-relationships/serial-2/"
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, base, nil)
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("User-Agent", "ASNForge/0.1 (https://github.com/ipanalytics/ASNforge)")
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+	if res.StatusCode < 200 || res.StatusCode > 299 {
+		return "", fmt.Errorf("CAIDA serial-2 listing HTTP %s", res.Status)
+	}
+	b, err := io.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+	re := regexp.MustCompile(`20[0-9]{6}\.as-rel2\.txt\.bz2`)
+	matches := re.FindAllString(string(b), -1)
+	if len(matches) == 0 {
+		return "", fmt.Errorf("no CAIDA serial-2 relationship files found in listing")
+	}
+	sort.Strings(matches)
+	return base + matches[len(matches)-1], nil
 }
 
 func looksLikeBGP(path string) bool {
