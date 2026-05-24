@@ -20,8 +20,12 @@ sources:
     collectors: [routeviews2, ris-rrc00]
     paths:
       - examples/testdata/bgp/prefix-origin.csv
+  asn_catalog:
+    enabled: true
+    mode: bgp-tools-asns
+    paths:
+      - examples/testdata/asn/asns.csv
 overrides:
   path: examples/overrides.yaml
 smoke:
   path: examples/smoke.json
-

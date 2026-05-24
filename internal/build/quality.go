@@ -27,6 +27,9 @@ func Evaluate(profiles []asn.Profile, prefixes []bgp.PrefixOrigin, mmdbPath stri
 		if p.ASNType == asn.TypeUnknown {
 			s.UnknownTypeASNs++
 		}
+		if p.ASNName != "" {
+			s.NamedASNProfiles++
+		}
 	}
 	for _, p := range prefixes {
 		if p.MOAS {
@@ -61,6 +64,9 @@ func Evaluate(profiles []asn.Profile, prefixes []bgp.PrefixOrigin, mmdbPath stri
 func ApplyProfileQualityPolicy(profile string, q *Quality, s *Summary) {
 	if profile == "public-safe" && s.Prefixes < 100000 {
 		q.Errors = append(q.Errors, fmt.Sprintf("public-safe prefix count too low: got %d, want at least 100000", s.Prefixes))
+	}
+	if profile == "public-safe" && s.NamedASNProfiles < 50000 {
+		q.Errors = append(q.Errors, fmt.Sprintf("public-safe ASN name coverage too low: got %d, want at least 50000", s.NamedASNProfiles))
 	}
 	if len(q.Errors) > 0 {
 		q.Verdict = "FAIL"
@@ -102,7 +108,13 @@ func WriteQualityReport(path, buildID, generatedAt string, sources []download.So
 			moas++
 		}
 	}
-	fmt.Fprintf(&b, "\n## Summary\n\nASN profile count: %d\n\nPrefix count: %d\n\nMMDB prefix insert count: %d\n\nMOAS prefix count: %d\n\nPrivate/reserved ASN count: %d\n\nUnknown type count: %d\n\n", len(profiles), len(prefixes), len(prefixes), moas, privateReserved, unknown)
+	named := 0
+	for _, p := range profiles {
+		if p.ASNName != "" {
+			named++
+		}
+	}
+	fmt.Fprintf(&b, "\n## Summary\n\nASN profile count: %d\n\nNamed ASN profile count: %d\n\nPrefix count: %d\n\nMMDB prefix insert count: %d\n\nMOAS prefix count: %d\n\nPrivate/reserved ASN count: %d\n\nUnknown type count: %d\n\n", len(profiles), named, len(prefixes), len(prefixes), moas, privateReserved, unknown)
 	b.WriteString("Top ASN types: " + topCounts(typeCounts) + "\n\n")
 	b.WriteString("Top tags: " + topCounts(tagCounts) + "\n\n")
 	fmt.Fprintf(&b, "Quality verdict: **%s**\n\n", q.Verdict)
@@ -185,6 +197,9 @@ func ValidateReleaseDir(outDir string, strict bool) error {
 	if metadata.ConfigProfile == "public-safe" {
 		if metadata.Summary.Prefixes < 100000 || metadata.Summary.MMDBInsertedPrefixes < 100000 {
 			return fmt.Errorf("public-safe release has too few prefixes: prefixes=%d mmdb_inserted_prefixes=%d", metadata.Summary.Prefixes, metadata.Summary.MMDBInsertedPrefixes)
+		}
+		if metadata.Summary.NamedASNProfiles < 50000 {
+			return fmt.Errorf("public-safe release has too few named ASN profiles: named_asn_profiles=%d", metadata.Summary.NamedASNProfiles)
 		}
 		for _, source := range metadata.Sources {
 			if strings.Contains(filepath.ToSlash(source.URL), "examples/testdata/") || strings.Contains(filepath.ToSlash(source.LocalPath), "examples/testdata/") {

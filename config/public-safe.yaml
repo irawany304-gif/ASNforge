@@ -21,6 +21,11 @@ sources:
       - bgp.tools
     urls:
       - "https://bgp.tools/table.jsonl"
+  asn_catalog:
+    enabled: true
+    mode: bgp-tools-asns
+    urls:
+      - "https://bgp.tools/asns.csv"
 overrides:
   path: examples/overrides.yaml
 smoke:

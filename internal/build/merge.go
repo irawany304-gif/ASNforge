@@ -59,6 +59,52 @@ func EnsureProfilesForOrigins(profiles map[uint32]asn.Profile, origins []uint32,
 	}
 }
 
+func ApplyCatalog(records []asn.CatalogRecord, profiles map[uint32]asn.Profile, schema, buildID, generatedAt string) {
+	for _, rec := range records {
+		p := profiles[rec.ASN]
+		if p.ASN == 0 {
+			p.SchemaVersion = schema
+			p.BuildID = buildID
+			p.ASN = rec.ASN
+			p.ASNType = asn.TypeUnknown
+			p.ASNConfidence = 30
+			p.PrivateASN = asn.IsPrivate(rec.ASN)
+			p.ReservedASN = asn.IsReserved(rec.ASN)
+			p.GeneratedAt = generatedAt
+		}
+		if p.FieldSources == nil {
+			p.FieldSources = map[string][]string{}
+		}
+		if rec.Name != "" && p.ASNName == "" {
+			p.ASNName = rec.Name
+			p.ASNOrg = rec.Name
+			p.FieldSources["asn_name"] = appendSource(p.FieldSources["asn_name"], "bgp.tools-asns")
+			p.FieldSources["asn_org"] = appendSource(p.FieldSources["asn_org"], "bgp.tools-asns")
+		}
+		if rec.ASNType != "" && rec.ASNType != asn.TypeUnknown && p.ASNType == asn.TypeUnknown {
+			p.ASNType = rec.ASNType
+			p.FieldSources["asn_type"] = appendSource(p.FieldSources["asn_type"], "bgp.tools-asns")
+		}
+		if len(rec.Tags) > 0 {
+			p.ASNTags = asn.NormalizeTags(append(p.ASNTags, rec.Tags...))
+			p.FieldSources["asn_tags"] = appendSource(p.FieldSources["asn_tags"], "bgp.tools-asns")
+		}
+		if rec.Confidence > p.ASNConfidence {
+			p.ASNConfidence = rec.Confidence
+		}
+		profiles[rec.ASN] = p
+	}
+}
+
+func appendSource(existing []string, source string) []string {
+	for _, v := range existing {
+		if v == source {
+			return existing
+		}
+	}
+	return append(existing, source)
+}
+
 func ApplyOverrides(path string, profiles map[uint32]asn.Profile) error {
 	if path == "" {
 		return nil
@@ -133,4 +179,27 @@ func SortedProfiles(m map[uint32]asn.Profile, policy string) []asn.Profile {
 		out = append(out, p)
 	}
 	return out
+}
+
+func ApplyNameHeuristics(profiles map[uint32]asn.Profile) {
+	for id, p := range profiles {
+		if p.ASNType != asn.TypeUnknown {
+			continue
+		}
+		classifiedType, tags, confidence := asn.ClassifyName(p.ASNName, p.ASNOrg)
+		if classifiedType == asn.TypeUnknown {
+			continue
+		}
+		if p.FieldSources == nil {
+			p.FieldSources = map[string][]string{}
+		}
+		p.ASNType = classifiedType
+		p.ASNTags = asn.NormalizeTags(append(p.ASNTags, tags...))
+		p.FieldSources["asn_type"] = appendSource(p.FieldSources["asn_type"], "name-heuristic")
+		p.FieldSources["asn_tags"] = appendSource(p.FieldSources["asn_tags"], "name-heuristic")
+		if confidence > p.ASNConfidence {
+			p.ASNConfidence = confidence
+		}
+		profiles[id] = p
+	}
 }

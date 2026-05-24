@@ -60,10 +60,10 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 	fmt.Fprintln(os.Stderr, "asnforge: parsing RIR delegated data")
 	var allocs []rir.ASNAllocation
 	for _, sf := range sources {
-		if sf.Name == "bgp" || filepath.Base(filepath.Dir(sf.LocalPath)) == "bgp" {
+		if sf.Name == "bgp" || sf.Name == "asn_catalog" || filepath.Base(filepath.Dir(sf.LocalPath)) == "bgp" {
 			continue
 		}
-		if looksLikeBGP(sf.LocalPath) {
+		if looksLikeBGP(sf.LocalPath) || looksLikeASNCatalog(sf) {
 			continue
 		}
 		got, err := rir.ParseDelegatedFile(sf.LocalPath)
@@ -73,6 +73,13 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 		allocs = append(allocs, got...)
 	}
 	profileMap := ProfilesFromAllocations(allocs, opts.SchemaVersion, opts.BuildID, generatedAt)
+
+	fmt.Fprintln(os.Stderr, "asnforge: parsing ASN catalog data")
+	catalogRecords, err := parseASNCatalogs(sources)
+	if err != nil {
+		return Metadata{}, err
+	}
+	ApplyCatalog(catalogRecords, profileMap, opts.SchemaVersion, opts.BuildID, generatedAt)
 
 	fmt.Fprintln(os.Stderr, "asnforge: parsing prefix-origin observations")
 	var observations []bgp.PrefixOriginObservation
@@ -88,6 +95,7 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 	prefixes := bgp.Aggregate(observations, opts.MOASPolicy, opts.SchemaVersion, opts.BuildID, generatedAt)
 	origins := originSet(prefixes)
 	EnsureProfilesForOrigins(profileMap, origins, opts.SchemaVersion, opts.BuildID, generatedAt)
+	ApplyNameHeuristics(profileMap)
 	if err := ApplyOverrides(cfg.Overrides.Path, profileMap); err != nil {
 		return Metadata{}, err
 	}
@@ -226,6 +234,14 @@ func collectSources(ctx context.Context, cfg config.Config, opts config.Options)
 			return nil, err
 		}
 		out = append(out, bgps...)
+		catalogs, err := download.DownloadAll(ctx, opts.CacheDir, "asn_catalog", cfg.Sources.ASNCatalog.URLs)
+		if err != nil {
+			return nil, err
+		}
+		for i := range catalogs {
+			catalogs[i].Name = "asn_catalog"
+		}
+		out = append(out, catalogs...)
 	}
 	for _, p := range cfg.Sources.BGP.Paths {
 		sf, err := download.LocalSourceFile(p)
@@ -235,12 +251,43 @@ func collectSources(ctx context.Context, cfg config.Config, opts config.Options)
 		sf.Name = "bgp"
 		out = append(out, sf)
 	}
+	for _, p := range cfg.Sources.ASNCatalog.Paths {
+		sf, err := download.LocalSourceFile(p)
+		if err != nil {
+			return nil, err
+		}
+		sf.Name = "asn_catalog"
+		out = append(out, sf)
+	}
 	return out, nil
 }
 
 func looksLikeBGP(path string) bool {
 	base := filepath.Base(path)
 	return base == "prefix-origin.csv" || base == "prefix-origin.tsv" || filepath.Ext(base) == ".jsonl" || filepath.Base(filepath.Dir(path)) == "bgp"
+}
+
+func looksLikeASNCatalog(sf download.SourceFile) bool {
+	if sf.Name == "asn_catalog" {
+		return true
+	}
+	base := filepath.Base(sf.LocalPath)
+	return base == "asns.csv" || filepath.Base(filepath.Dir(sf.LocalPath)) == "asn_catalog"
+}
+
+func parseASNCatalogs(sources []download.SourceFile) ([]asn.CatalogRecord, error) {
+	var out []asn.CatalogRecord
+	for _, sf := range sources {
+		if !looksLikeASNCatalog(sf) {
+			continue
+		}
+		rows, err := asn.ParseBGPToolsASNsCSV(sf.LocalPath)
+		if err != nil {
+			return nil, err
+		}
+		out = append(out, rows...)
+	}
+	return out, nil
 }
 
 func originSet(prefixes []bgp.PrefixOrigin) []uint32 {

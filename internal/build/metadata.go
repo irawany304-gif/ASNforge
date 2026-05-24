@@ -19,6 +19,7 @@ type Summary struct {
 	PrivateASNRecords    int     `json:"private_asn_records"`
 	ReservedASNRecords   int     `json:"reserved_asn_records"`
 	UnknownTypeASNs      int     `json:"unknown_type_asns"`
+	NamedASNProfiles     int     `json:"named_asn_profiles"`
 	MMDBInsertedPrefixes int     `json:"mmdb_inserted_prefixes"`
 	BuildDurationSeconds float64 `json:"build_duration_seconds"`
 }

@@ -21,7 +21,7 @@ ASNForge builds reproducible ASN and prefix-origin intelligence artifacts for IP
 
 ASNForge is a local compiler for ASN profile and prefix-origin datasets. It is designed for teams that need deterministic, inspectable artifacts instead of ad hoc enrichment files assembled by scripts.
 
-The v0.1 pipeline ingests RIR delegated stats, normalized BGP prefix-origin observations, and curated overrides. It emits stable JSONL/CSV tables for analytics and joins, plus a compact MaxMind DB for latency-sensitive IP enrichment.
+The v0.1 pipeline ingests RIR delegated stats, bgp.tools prefix-origin and ASN catalog exports, normalized local inputs, and curated overrides. It emits stable JSONL/CSV tables for analytics and joins, plus a compact MaxMind DB for latency-sensitive IP enrichment.
 
 The compiler records build identifiers, schema versions, source hashes, artifact hashes, quality results, and release manifests so generated data can be traced and compared across builds.
 
@@ -54,6 +54,9 @@ ASNForge produces three related artifact families:
 
 - RIR delegated extended parser for ASN allocation records.
 - Normalized BGP prefix-origin CSV/TSV parser with collector-aware aggregation.
+- bgp.tools bulk table parser for production prefix-origin snapshots.
+- bgp.tools ASN catalog parser for ASN names and coarse source classes.
+- Conservative name-based classification fallback for obvious ASN categories.
 - Manual ASN overrides for curated name, organization, type, tags, confidence, and field sources.
 - MOAS handling with deterministic policies: `mark_ambiguous`, `most_observed`, `lowest_asn`.
 - Private and reserved ASN handling with `flag`, `drop`, and `keep` policies.
@@ -262,9 +265,9 @@ Detailed MOAS state, origin arrays, collector observations, and field-level prov
 | Profile | Purpose | Network required |
 | --- | --- | --- |
 | `config/local-dev.yaml` | Deterministic development and CI fixture build | No |
-| `config/public-safe.yaml` | Public-safe release profile using RIR delegated files and the bgp.tools table export | Yes |
+| `config/public-safe.yaml` | Public-safe release profile using RIR delegated files, bgp.tools table export, and bgp.tools ASN catalog | Yes |
 
-The public-safe profile downloads `https://bgp.tools/table.jsonl` for production prefix-origin input. The deterministic fixture under `examples/testdata` is intentionally scoped to `config/local-dev.yaml`.
+The public-safe profile downloads `https://bgp.tools/table.jsonl` for production prefix-origin input and `https://bgp.tools/asns.csv` for ASN names and source classes. The deterministic fixture under `examples/testdata` is intentionally scoped to `config/local-dev.yaml`.
 
 The v0.1 public-safe profile does not include CAIDA data by default. Optional PeeringDB, CAIDA, RPKI, and native MRT support are tracked as later source profiles and parser extensions.
 

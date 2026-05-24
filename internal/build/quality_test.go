@@ -28,7 +28,7 @@ func TestQualityReportGeneration(t *testing.T) {
 
 func TestPublicSafeQualityPolicyFailsTinyPrefixSet(t *testing.T) {
 	q := Quality{Verdict: "PASS"}
-	s := Summary{Prefixes: 5, MMDBInsertedPrefixes: 5}
+	s := Summary{Prefixes: 5, MMDBInsertedPrefixes: 5, NamedASNProfiles: 2}
 	ApplyProfileQualityPolicy("public-safe", &q, &s)
 	if q.Verdict != "FAIL" {
 		t.Fatalf("expected FAIL, got %+v", q)

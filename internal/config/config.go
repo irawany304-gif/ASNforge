@@ -30,6 +30,12 @@ type Config struct {
 			URLs       []string `yaml:"urls"`
 			Paths      []string `yaml:"paths"`
 		} `yaml:"bgp"`
+		ASNCatalog struct {
+			Enabled bool     `yaml:"enabled"`
+			Mode    string   `yaml:"mode"`
+			URLs    []string `yaml:"urls"`
+			Paths   []string `yaml:"paths"`
+		} `yaml:"asn_catalog"`
 	} `yaml:"sources"`
 	Overrides struct {
 		Path string `yaml:"path"`
