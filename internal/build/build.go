@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/ipanalytics/ASNforge/internal/asn"
@@ -131,6 +132,7 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 	q, summary := Evaluate(profiles, prefixes, opts.MMDBPath, cfg.MaxMMDBSizeMB)
 	summary.MMDBInsertedPrefixes = inserted
 	summary.BuildDurationSeconds = time.Since(start).Seconds()
+	ApplyProfileQualityPolicy(cfg.Profile, &q, &summary)
 
 	artifacts, err := collectArtifacts(opts.OutDir, profiles, prefixes)
 	if err != nil {
@@ -180,6 +182,12 @@ func validateSourceProfile(cfg config.Config) error {
 	}
 	if cfg.Sources.BGP.Enabled && len(cfg.Sources.BGP.URLs) == 0 && len(cfg.Sources.BGP.Paths) == 0 {
 		return fmt.Errorf("public-safe profile requires at least one production BGP prefix-origin URL or path; use config/local-dev.yaml for deterministic fixture builds")
+	}
+	for _, path := range cfg.Sources.BGP.Paths {
+		clean := filepath.ToSlash(path)
+		if strings.Contains(clean, "examples/testdata/") {
+			return fmt.Errorf("public-safe profile must not use deterministic testdata path %q", path)
+		}
 	}
 	return nil
 }

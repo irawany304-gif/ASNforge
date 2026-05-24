@@ -1,6 +1,7 @@
 package build
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -55,6 +56,19 @@ func Evaluate(profiles []asn.Profile, prefixes []bgp.PrefixOrigin, mmdbPath stri
 		q.Verdict = "WARN"
 	}
 	return q, s
+}
+
+func ApplyProfileQualityPolicy(profile string, q *Quality, s *Summary) {
+	if profile == "public-safe" && s.Prefixes < 100000 {
+		q.Errors = append(q.Errors, fmt.Sprintf("public-safe prefix count too low: got %d, want at least 100000", s.Prefixes))
+	}
+	if len(q.Errors) > 0 {
+		q.Verdict = "FAIL"
+	} else if len(q.Warnings) > 0 {
+		q.Verdict = "WARN"
+	} else {
+		q.Verdict = "PASS"
+	}
 }
 
 func WriteQualityReport(path, buildID, generatedAt string, sources []download.SourceFile, artifacts []output.Artifact, profiles []asn.Profile, prefixes []bgp.PrefixOrigin, q Quality, smoke []string) error {
@@ -138,7 +152,7 @@ func topCounts(m map[string]int) string {
 	return strings.Join(parts, ", ")
 }
 
-func ValidateReleaseDir(outDir string) error {
+func ValidateReleaseDir(outDir string, strict bool) error {
 	required := []string{"asnforge.mmdb", "asnforge-asn.jsonl", "asnforge-asn.csv", "asnforge-prefixes.jsonl", "asnforge-prefixes.csv", "metadata.json", "checksums.txt", "quality-report.md", "asnforge-diff.json", "manifest.json"}
 	for _, name := range required {
 		if _, err := os.Stat(filepath.Join(outDir, name)); err != nil {
@@ -151,6 +165,35 @@ func ValidateReleaseDir(outDir string) error {
 	}
 	if !strings.Contains(string(lines), "asnforge.mmdb") {
 		return fmt.Errorf("checksums missing asnforge.mmdb")
+	}
+	metadataBytes, err := os.ReadFile(filepath.Join(outDir, "metadata.json"))
+	if err != nil {
+		return err
+	}
+	var metadata struct {
+		ConfigProfile string  `json:"config_profile"`
+		Summary       Summary `json:"summary"`
+		Quality       Quality `json:"quality"`
+		Sources       []struct {
+			URL       string `json:"url"`
+			LocalPath string `json:"local_path"`
+		} `json:"sources"`
+	}
+	if err := json.Unmarshal(metadataBytes, &metadata); err != nil {
+		return fmt.Errorf("parse metadata.json: %w", err)
+	}
+	if metadata.ConfigProfile == "public-safe" {
+		if metadata.Summary.Prefixes < 100000 || metadata.Summary.MMDBInsertedPrefixes < 100000 {
+			return fmt.Errorf("public-safe release has too few prefixes: prefixes=%d mmdb_inserted_prefixes=%d", metadata.Summary.Prefixes, metadata.Summary.MMDBInsertedPrefixes)
+		}
+		for _, source := range metadata.Sources {
+			if strings.Contains(filepath.ToSlash(source.URL), "examples/testdata/") || strings.Contains(filepath.ToSlash(source.LocalPath), "examples/testdata/") {
+				return fmt.Errorf("public-safe release uses testdata source: %s", source.URL)
+			}
+		}
+	}
+	if strict && metadata.Quality.Verdict == "FAIL" {
+		return fmt.Errorf("quality verdict %s", metadata.Quality.Verdict)
 	}
 	return nil
 }
