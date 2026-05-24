@@ -1,0 +1,29 @@
+profile: public-safe
+schema_version: asnforge.v0.1
+private_asn_policy: flag
+moas_policy: mark_ambiguous
+compression: true
+max_mmdb_size_mb: 256
+source_timeout: 60s
+sources:
+  rir:
+    enabled: true
+    urls:
+      afrinic: "https://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest"
+      apnic: "https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest"
+      arin: "https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest"
+      lacnic: "https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest"
+      ripe: "https://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest"
+  bgp:
+    enabled: true
+    mode: preprocessed-or-bgpdump
+    collectors:
+      - routeviews2
+      - ris-rrc00
+    urls: []
+    paths:
+      - examples/testdata/bgp/prefix-origin.csv
+overrides:
+  path: examples/overrides.yaml
+smoke:
+  path: examples/smoke.json

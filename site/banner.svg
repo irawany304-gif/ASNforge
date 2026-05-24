@@ -1,0 +1,49 @@
+<svg width="1600" height="420" viewBox="0 0 1600 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">ASNForge</title>
+  <desc id="desc">ASNForge routing and registry intelligence compiler banner</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1020"/>
+      <stop offset="0.55" stop-color="#102033"/>
+      <stop offset="1" stop-color="#13251d"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 92px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #f8fafc; letter-spacing: 0; }
+      .sub { font: 400 30px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #cbd5e1; letter-spacing: 0; }
+      .label { font: 600 21px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #e2e8f0; letter-spacing: 0; }
+      .small { font: 500 17px ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #94a3b8; letter-spacing: 0; }
+      .node { fill: #101827; stroke: #38bdf8; stroke-width: 2; }
+      .node2 { fill: #10211d; stroke: #34d399; stroke-width: 2; }
+      .line { stroke: #64748b; stroke-width: 2; opacity: 0.7; }
+    </style>
+  </defs>
+  <rect width="1600" height="420" fill="url(#bg)"/>
+  <path d="M0 336 C220 290 330 380 540 330 S920 265 1140 310 S1430 380 1600 306 L1600 420 L0 420 Z" fill="#0f172a" opacity="0.72"/>
+  <g transform="translate(930 76)">
+    <line class="line" x1="90" y1="65" x2="300" y2="65"/>
+    <line class="line" x1="300" y1="65" x2="420" y2="166"/>
+    <line class="line" x1="300" y1="65" x2="420" y2="-36"/>
+    <line class="line" x1="90" y1="65" x2="190" y2="210"/>
+    <rect class="node" x="0" y="22" width="180" height="86" rx="8"/>
+    <text class="label" x="28" y="58">RIR Stats</text>
+    <text class="small" x="28" y="84">registration data</text>
+    <rect class="node" x="220" y="22" width="190" height="86" rx="8"/>
+    <text class="label" x="252" y="58">BGP Origins</text>
+    <text class="small" x="252" y="84">collector snapshot</text>
+    <rect class="node2" x="458" y="-78" width="220" height="86" rx="8"/>
+    <text class="label" x="492" y="-42">ASN Table</text>
+    <text class="small" x="492" y="-16">JSONL / CSV</text>
+    <rect class="node2" x="458" y="124" width="220" height="86" rx="8"/>
+    <text class="label" x="492" y="160">Prefix Table</text>
+    <text class="small" x="492" y="186">origin state</text>
+    <rect class="node2" x="128" y="226" width="220" height="86" rx="8"/>
+    <text class="label" x="162" y="262">MMDB</text>
+    <text class="small" x="162" y="288">IP enrichment</text>
+  </g>
+  <g transform="translate(112 104)">
+    <text class="title" x="0" y="0">ASNForge</text>
+    <text class="sub" x="4" y="54">Reproducible ASN and prefix-origin intelligence compiler</text>
+    <text class="small" x="6" y="108">Registry allocations · BGP origin state · compact MaxMind DB · release metadata</text>
+  </g>
+</svg>
+

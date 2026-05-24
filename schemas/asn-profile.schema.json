@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASNForge ASN Profile",
+  "type": "object",
+  "required": ["schema_version", "build_id", "asn", "asn_type", "asn_tags", "registration_country", "rir", "asn_confidence"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "build_id": {"type": "string"},
+    "asn": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "asn_name": {"type": "string"},
+    "asn_org": {"type": "string"},
+    "asn_type": {"enum": ["isp", "hosting", "cloud", "cdn", "transit", "enterprise", "education", "government", "ix", "security", "crawler", "unknown"]},
+    "asn_tags": {"type": "array", "items": {"enum": ["cloud", "cdn", "hosting", "residential", "broadband", "mobile", "transit", "backbone", "enterprise", "education", "government", "ix", "security", "vpn-adjacent", "privacy-service", "tor-adjacent", "crawler", "search", "ai-crawler-adjacent", "anycast", "dns", "email", "suspicious", "manual-override"]}},
+    "registration_country": {"type": "string"},
+    "rir": {"type": "string"},
+    "allocation_status": {"type": "string"},
+    "allocation_date": {"type": "string"},
+    "asn_confidence": {"type": "integer", "minimum": 0, "maximum": 100},
+    "field_sources": {"type": "object"},
+    "private_asn": {"type": "boolean"},
+    "reserved_asn": {"type": "boolean"},
+    "source_updated_at": {"type": "string"},
+    "generated_at": {"type": "string"}
+  }
+}
+

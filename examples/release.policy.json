@@ -1,0 +1,8 @@
+{
+  "profile": "public-safe",
+  "private_asn_policy": "flag",
+  "moas_policy": "mark_ambiguous",
+  "caida_default": false,
+  "notes": "Generated artifacts may include third-party routing and registry data. Operators are responsible for redistribution rights for configured sources."
+}
+

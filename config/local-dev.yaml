@@ -1,0 +1,27 @@
+profile: local-dev
+schema_version: asnforge.v0.1
+private_asn_policy: flag
+moas_policy: most_observed
+compression: true
+max_mmdb_size_mb: 16
+source_timeout: 5s
+sources:
+  rir:
+    enabled: true
+    paths:
+      arin: examples/testdata/rir/delegated-arin-extended-latest
+      ripe: examples/testdata/rir/delegated-ripencc-extended-latest
+      apnic: examples/testdata/rir/delegated-apnic-extended-latest
+      afrinic: examples/testdata/rir/delegated-afrinic-extended-latest
+      lacnic: examples/testdata/rir/delegated-lacnic-extended-latest
+  bgp:
+    enabled: true
+    mode: preprocessed
+    collectors: [routeviews2, ris-rrc00]
+    paths:
+      - examples/testdata/bgp/prefix-origin.csv
+overrides:
+  path: examples/overrides.yaml
+smoke:
+  path: examples/smoke.json
+

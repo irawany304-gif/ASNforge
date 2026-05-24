@@ -1,0 +1,13 @@
+{
+  "ip_lookups": [
+    {"ip": "8.8.8.8", "expect": {"asn": 15169}},
+    {"ip": "1.1.1.1", "expect": {"asn": 13335}}
+  ],
+  "asn_lookups": [
+    {"asn": 15169, "expect": {"asn_type": "cloud"}}
+  ],
+  "prefix_lookups": [
+    {"prefix": "8.8.8.0/24", "expect": {"selected_origin_asn": 15169}}
+  ]
+}
+

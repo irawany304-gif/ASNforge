@@ -1,0 +1,24 @@
+asns:
+  "15169":
+    asn_name: "Google LLC"
+    asn_org: "Google"
+    asn_type: "cloud"
+    asn_tags: ["cloud", "search", "dns"]
+    asn_confidence: 100
+    field_sources:
+      asn_name: ["manual"]
+      asn_org: ["manual"]
+      asn_type: ["manual"]
+      asn_tags: ["manual"]
+  "13335":
+    asn_name: "Cloudflare, Inc."
+    asn_org: "Cloudflare"
+    asn_type: "cdn"
+    asn_tags: ["cdn", "cloud", "dns", "security"]
+    asn_confidence: 100
+    field_sources:
+      asn_name: ["manual"]
+      asn_org: ["manual"]
+      asn_type: ["manual"]
+      asn_tags: ["manual"]
+

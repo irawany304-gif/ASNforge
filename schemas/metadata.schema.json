@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASNForge Metadata",
+  "type": "object",
+  "required": ["schema_version", "build_id", "generated_at", "tool_version", "config_profile", "sources", "artifacts", "summary", "quality"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "build_id": {"type": "string"},
+    "generated_at": {"type": "string"},
+    "git_commit": {"type": "string"},
+    "tool_version": {"type": "string"},
+    "config_profile": {"type": "string"},
+    "sources": {"type": "array"},
+    "artifacts": {"type": "array"},
+    "summary": {"type": "object"},
+    "quality": {"type": "object", "required": ["verdict"], "properties": {"verdict": {"enum": ["PASS", "WARN", "FAIL"]}}}
+  }
+}
+

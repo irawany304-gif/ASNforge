@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASNForge Prefix Origin",
+  "type": "object",
+  "required": ["schema_version", "build_id", "prefix", "origin_asns", "selected_origin_asn", "moas", "origin_policy", "observation_count", "prefix_confidence"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "build_id": {"type": "string"},
+    "prefix": {"type": "string", "pattern": "^[0-9A-Fa-f:.]+/[0-9]{1,3}$"},
+    "origin_asns": {"type": "array", "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}},
+    "selected_origin_asn": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "moas": {"type": "boolean"},
+    "origin_policy": {"enum": ["mark_ambiguous", "most_observed", "lowest_asn"]},
+    "observation_count": {"type": "integer", "minimum": 0},
+    "source_collectors": {"type": "array", "items": {"type": "string"}},
+    "prefix_confidence": {"type": "integer", "minimum": 0, "maximum": 100},
+    "rpki_state": {"type": "string", "default": "unknown"},
+    "private_asn": {"type": "boolean"},
+    "reserved_asn": {"type": "boolean"},
+    "generated_at": {"type": "string"}
+  }
+}
+

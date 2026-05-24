@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ASNForge MMDB Record",
+  "type": "object",
+  "required": ["schema_version", "build_id", "asn", "asn_name", "asn_org", "asn_type", "asn_tags", "registration_country", "rir", "moas", "asn_confidence"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "build_id": {"type": "string"},
+    "asn": {"type": "integer", "minimum": 0, "maximum": 4294967295},
+    "asn_name": {"type": "string"},
+    "asn_org": {"type": "string"},
+    "asn_type": {"enum": ["isp", "hosting", "cloud", "cdn", "transit", "enterprise", "education", "government", "ix", "security", "crawler", "unknown"]},
+    "asn_tags": {"type": "array", "items": {"enum": ["cloud", "cdn", "hosting", "residential", "broadband", "mobile", "transit", "backbone", "enterprise", "education", "government", "ix", "security", "vpn-adjacent", "privacy-service", "tor-adjacent", "crawler", "search", "ai-crawler-adjacent", "anycast", "dns", "email", "suspicious", "manual-override"]}},
+    "registration_country": {"type": "string"},
+    "rir": {"type": "string"},
+    "moas": {"type": "boolean"},
+    "asn_confidence": {"type": "integer", "minimum": 0, "maximum": 100}
+  }
+}
+
