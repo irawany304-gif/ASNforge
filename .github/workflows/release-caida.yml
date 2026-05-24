@@ -1,0 +1,41 @@
+name: release-caida
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-caida:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache: true
+      - name: build asnforge
+        run: go build -ldflags "-X github.com/ipanalytics/ASNforge/internal/version.Version=${GITHUB_REF_NAME} -X github.com/ipanalytics/ASNforge/internal/version.Commit=${GITHUB_SHA} -X github.com/ipanalytics/ASNforge/internal/version.Date=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o asnforge ./cmd/asnforge
+      - name: build CAIDA research artifacts
+        run: ./asnforge build --config config/research-caida.yaml --out release/caida
+      - name: validate CAIDA research artifacts
+        run: ./asnforge validate --out release/caida --strict
+      - name: compute release tag
+        id: tag
+        run: echo "tag=research-caida-$(date -u +%Y%m%d-%H%M%SZ)" >> "$GITHUB_OUTPUT"
+      - name: publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          prerelease: true
+          files: |
+            release/caida/asnforge.mmdb.gz
+            release/caida/asnforge-asn.jsonl.gz
+            release/caida/asnforge-asn.csv.gz
+            release/caida/asnforge-prefixes.jsonl.gz
+            release/caida/asnforge-prefixes.csv.gz
+            release/caida/metadata.json
+            release/caida/checksums.txt
+            release/caida/quality-report.md
+            release/caida/asnforge-diff.json
+            release/caida/manifest.json
