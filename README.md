@@ -262,7 +262,9 @@ Detailed MOAS state, origin arrays, collector observations, and field-level prov
 | Profile | Purpose | Network required |
 | --- | --- | --- |
 | `config/local-dev.yaml` | Deterministic development and CI fixture build | No |
-| `config/public-safe.yaml` | Public-safe release profile with RIR URLs and configurable BGP inputs | Yes for live RIR downloads |
+| `config/public-safe.yaml` | Public-safe release profile using RIR delegated files and the bgp.tools table export | Yes |
+
+The public-safe profile downloads `https://bgp.tools/table.jsonl` for production prefix-origin input. The deterministic fixture under `examples/testdata` is intentionally scoped to `config/local-dev.yaml`.
 
 The v0.1 public-safe profile does not include CAIDA data by default. Optional PeeringDB, CAIDA, RPKI, and native MRT support are tracked as later source profiles and parser extensions.
 

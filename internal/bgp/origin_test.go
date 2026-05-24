@@ -1,6 +1,10 @@
 package bgp
 
-import "testing"
+import (
+	"os"
+	"path/filepath"
+	"testing"
+)
 
 func TestMOASSelectionPolicy(t *testing.T) {
 	obs := []PrefixOriginObservation{
@@ -23,5 +27,20 @@ func TestPrefixSorting(t *testing.T) {
 	SortPrefixes(rows)
 	if rows[0].Prefix != "10.0.0.0/24" || rows[2].Prefix != "2001:db8::/32" {
 		t.Fatalf("unexpected order: %+v", rows)
+	}
+}
+
+func TestParseBGPToolsJSONL(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "table.jsonl")
+	data := "{\"CIDR\":\"8.8.8.0/24\",\"ASN\":15169,\"Hits\":713}\n{\"CIDR\":\"2001:4860:4860::/48\",\"ASN\":15169,\"Hits\":100}\n"
+	if err := os.WriteFile(path, []byte(data), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	got, err := ParsePreprocessedFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(got) != 2 || got[0].Prefix != "8.8.8.0/24" || got[0].ObservationCount != 713 || got[0].Collector != "bgp.tools" {
+		t.Fatalf("unexpected parsed rows: %+v", got)
 	}
 }

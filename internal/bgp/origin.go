@@ -7,10 +7,11 @@ import (
 )
 
 type PrefixOriginObservation struct {
-	Prefix     string
-	OriginASN  uint32
-	Collector  string
-	ObservedAt string
+	Prefix           string
+	OriginASN        uint32
+	Collector        string
+	ObservedAt       string
+	ObservationCount int
 }
 
 type PrefixOrigin struct {
@@ -38,14 +39,18 @@ func Aggregate(obs []PrefixOriginObservation, policy, schema, buildID, generated
 	}
 	byPrefix := map[string]*agg{}
 	for _, o := range obs {
+		count := o.ObservationCount
+		if count <= 0 {
+			count = 1
+		}
 		a := byPrefix[o.Prefix]
 		if a == nil {
 			a = &agg{counts: map[uint32]int{}, collectors: map[string]bool{}}
 			byPrefix[o.Prefix] = a
 		}
-		a.counts[o.OriginASN]++
+		a.counts[o.OriginASN] += count
 		a.collectors[o.Collector] = true
-		a.total++
+		a.total += count
 	}
 	out := make([]PrefixOrigin, 0, len(byPrefix))
 	for prefix, a := range byPrefix {

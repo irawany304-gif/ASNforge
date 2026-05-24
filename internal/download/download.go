@@ -59,6 +59,7 @@ func Download(ctx context.Context, cacheDir, group, raw string) (SourceFile, err
 	if err != nil {
 		return SourceFile{}, err
 	}
+	req.Header.Set("User-Agent", "ASNForge/0.1 (https://github.com/ipanalytics/ASNforge)")
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return SourceFile{}, err

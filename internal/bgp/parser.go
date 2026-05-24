@@ -1,8 +1,10 @@
 package bgp
 
 import (
+	"bufio"
 	"context"
 	"encoding/csv"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -19,6 +21,9 @@ type PrefixOriginSource interface {
 }
 
 func ParsePreprocessedFile(path string) ([]PrefixOriginObservation, error) {
+	if strings.HasSuffix(path, ".jsonl") {
+		return ParseBGPToolsJSONL(path)
+	}
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -63,4 +68,35 @@ func ParsePreprocessedFile(path string) ([]PrefixOriginObservation, error) {
 		})
 	}
 	return out, nil
+}
+
+func ParseBGPToolsJSONL(path string) ([]PrefixOriginObservation, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	type row struct {
+		CIDR string `json:"CIDR"`
+		ASN  uint32 `json:"ASN"`
+		Hits int    `json:"Hits"`
+	}
+	var out []PrefixOriginObservation
+	sc := bufio.NewScanner(f)
+	line := 0
+	for sc.Scan() {
+		line++
+		s := strings.TrimSpace(sc.Text())
+		if s == "" {
+			continue
+		}
+		var r row
+		if err := json.Unmarshal([]byte(s), &r); err != nil {
+			return nil, fmt.Errorf("%s:%d: invalid bgp.tools JSONL: %w", path, line, err)
+		}
+		out = append(out, PrefixOriginObservation{
+			Prefix: r.CIDR, OriginASN: r.ASN, Collector: "bgp.tools", ObservationCount: r.Hits,
+		})
+	}
+	return out, sc.Err()
 }

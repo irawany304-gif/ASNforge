@@ -16,13 +16,11 @@ sources:
       ripe: "https://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest"
   bgp:
     enabled: true
-    mode: preprocessed-or-bgpdump
+    mode: bgp-tools-table
     collectors:
-      - routeviews2
-      - ris-rrc00
-    # Configure production preprocessed prefix-origin feeds here.
-    # Expected format: prefix,origin_asn,collector,observed_at
-    urls: []
+      - bgp.tools
+    urls:
+      - "https://bgp.tools/table.jsonl"
 overrides:
   path: examples/overrides.yaml
 smoke:

@@ -29,6 +29,7 @@ func Write(path string, prefixes []bgp.PrefixOrigin, profiles map[uint32]asn.Pro
 	db, err := mmdbwriter.New(mmdbwriter.Options{
 		DatabaseType:            "ASNForge-ASN-Profile",
 		Description:             map[string]string{"en": "ASNForge compact IP to ASN profile"},
+		DisableIPv4Aliasing:     true,
 		IPVersion:               6,
 		IncludeReservedNetworks: true,
 	})

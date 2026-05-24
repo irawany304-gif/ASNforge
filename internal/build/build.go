@@ -232,7 +232,7 @@ func collectSources(ctx context.Context, cfg config.Config, opts config.Options)
 
 func looksLikeBGP(path string) bool {
 	base := filepath.Base(path)
-	return base == "prefix-origin.csv" || base == "prefix-origin.tsv" || filepath.Base(filepath.Dir(path)) == "bgp"
+	return base == "prefix-origin.csv" || base == "prefix-origin.tsv" || filepath.Ext(base) == ".jsonl" || filepath.Base(filepath.Dir(path)) == "bgp"
 }
 
 func originSet(prefixes []bgp.PrefixOrigin) []uint32 {
