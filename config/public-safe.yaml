@@ -20,10 +20,10 @@ sources:
     collectors:
       - routeviews2
       - ris-rrc00
+    # Configure production preprocessed prefix-origin feeds here.
+    # Expected format: prefix,origin_asn,collector,observed_at
     urls: []
-    paths:
-      - examples/testdata/bgp/prefix-origin.csv
 overrides:
   path: examples/overrides.yaml
 smoke:
-  path: examples/smoke.json
+  path: ""

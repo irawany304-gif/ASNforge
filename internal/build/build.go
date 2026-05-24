@@ -43,6 +43,9 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 	if err := config.ValidatePolicies(opts.PrivateASNPolicy, opts.MOASPolicy); err != nil {
 		return Metadata{}, err
 	}
+	if err := validateSourceProfile(cfg); err != nil {
+		return Metadata{}, err
+	}
 	generatedAt := time.Now().UTC().Format(time.RFC3339)
 	if err := os.MkdirAll(opts.OutDir, 0o755); err != nil {
 		return Metadata{}, err
@@ -169,6 +172,16 @@ func Run(ctx context.Context, opts config.Options) (Metadata, error) {
 		return md, fmt.Errorf("quality verdict %s", q.Verdict)
 	}
 	return md, nil
+}
+
+func validateSourceProfile(cfg config.Config) error {
+	if cfg.Profile != "public-safe" {
+		return nil
+	}
+	if cfg.Sources.BGP.Enabled && len(cfg.Sources.BGP.URLs) == 0 && len(cfg.Sources.BGP.Paths) == 0 {
+		return fmt.Errorf("public-safe profile requires at least one production BGP prefix-origin URL or path; use config/local-dev.yaml for deterministic fixture builds")
+	}
+	return nil
 }
 
 func collectSources(ctx context.Context, cfg config.Config, opts config.Options) ([]download.SourceFile, error) {
