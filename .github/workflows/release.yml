@@ -8,6 +8,10 @@ on:
     tags:
       - "v*"
 
+concurrency:
+  group: asnforge-release-publish-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -27,17 +31,17 @@ jobs:
         run: ./asnforge validate --out release/current --strict
       - name: generate release notes
         run: ./asnforge release-notes --out release/current --release-notes release/current/release-notes.md
-      - name: update README release stats
-        if: github.ref_type != 'tag'
-        run: ./asnforge update-readme-stats --out release/current --readme README.md
       - name: commit README release stats
         if: github.ref_type != 'tag'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          ./asnforge update-readme-stats --out release/current --readme README.md
           git add README.md
           git diff --cached --quiet || git commit -m "Update latest ASNForge release stats [skip ci]"
-          git push
+          git push origin "HEAD:$GITHUB_REF_NAME"
       - name: compute release tag
         id: tag
         run: |
