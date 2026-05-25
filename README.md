@@ -23,19 +23,19 @@ ASNForge builds reproducible ASN and prefix-origin intelligence artifacts for IP
 
 | Field | Value |
 | --- | ---: |
-| Build ID | `20260525-081859Z` |
-| Profile | `public-safe` |
-| Generated | `2026-05-25T08:18:59Z` |
+| Build ID | `20260525-082350Z` |
+| Profile | `research-caida` |
+| Generated | `2026-05-25T08:23:50Z` |
 | Quality | `PASS` |
-| ASN profiles | 137,473 |
-| Named ASN profiles | 120,775 |
+| ASN profiles | 137,474 |
+| Named ASN profiles | 121,918 |
 | Prefixes | 1,447,652 |
 | MMDB inserted prefixes | 1,447,652 |
 | MOAS prefixes | 14,589 |
 | Private ASN records | 200 |
 | Reserved ASN records | 28 |
-| Unknown type ASNs | 123,406 |
-| Build duration seconds | 62.13 |
+| Unknown type ASNs | 123,215 |
+| Build duration seconds | 73.26 |
 
 ## Sources
 
@@ -50,19 +50,21 @@ ASNForge builds reproducible ASN and prefix-origin intelligence artifacts for IP
 | `asn_catalog` | [asns.csv](https://bgp.tools/asns.csv) | 5,512,379 | `af6cbce76ffc` |
 | `asn_signals` | [asn-signals.csv](https://raw.githubusercontent.com/ipanalytics/IP-Knowledge-Layer/main/data/current/asn-signals.csv) | 119 | `f27bb5dba8a1` |
 | `asn_signals` | [asn-signals.csv](https://raw.githubusercontent.com/ipanalytics/ASN-Signal-Graph/main/data/current/asn-signals.csv) | 607,980 | `8185705bddfa` |
+| `caida_as2org` | [latest.as-org2info.txt.gz](https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz) | 3,971,516 | `4442b1c482ff` |
+| `caida_relationships` | [20260501.as-rel2.txt.bz2](https://publicdata.caida.org/datasets/as-relationships/serial-2/20260501.as-rel2.txt.bz2) | 2,248,035 | `c641a2ccd69d` |
 
 ## Artifacts
 
 | Artifact | Size | Records |
 | --- | ---: | ---: |
-| `asnforge-asn.csv.gz` | 2,828,794 | 137,473 |
-| `asnforge-asn.jsonl.gz` | 3,580,577 | 137,473 |
+| `asnforge-asn.csv.gz` | 4,133,144 | 137,474 |
+| `asnforge-asn.jsonl.gz` | 5,223,160 | 137,474 |
 | `asnforge-diff.json` | 224 | - |
-| `asnforge-prefixes.csv.gz` | 8,837,401 | 1,447,652 |
-| `asnforge-prefixes.jsonl.gz` | 10,737,358 | 1,447,652 |
-| `asnforge.mmdb.gz` | 6,077,413 | 1,447,652 |
-| `manifest.json` | 3,719 | - |
-| `quality-report.md` | 2,664 | - |
+| `asnforge-prefixes.csv.gz` | 8,837,160 | 1,447,652 |
+| `asnforge-prefixes.jsonl.gz` | 10,737,393 | 1,447,652 |
+| `asnforge.mmdb.gz` | 6,078,415 | 1,447,652 |
+| `manifest.json` | 3,695 | - |
+| `quality-report.md` | 2,863 | - |
 
 ## Numeric Diff
 
@@ -82,6 +84,7 @@ ASNForge builds reproducible ASN and prefix-origin intelligence artifacts for IP
 
 No warnings or errors.
 <!-- ASNFORGE:RELEASE-STATS END -->
+
 ## Overview
 
 ASNForge is a local compiler for ASN profile and prefix-origin datasets. It is designed for teams that need deterministic, inspectable artifacts instead of ad hoc enrichment files assembled by scripts.
