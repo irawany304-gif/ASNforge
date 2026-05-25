@@ -14,6 +14,7 @@ import (
 	buildpkg "github.com/ipanalytics/ASNforge/internal/build"
 	"github.com/ipanalytics/ASNforge/internal/config"
 	"github.com/ipanalytics/ASNforge/internal/mmdb"
+	"github.com/ipanalytics/ASNforge/internal/release"
 	"github.com/ipanalytics/ASNforge/internal/version"
 )
 
@@ -26,7 +27,7 @@ func main() {
 
 func run(args []string) error {
 	if len(args) == 0 {
-		return fmt.Errorf("usage: asnforge <build|download|validate|inspect-ip|inspect-asn|stats|version>")
+		return fmt.Errorf("usage: asnforge <build|download|validate|inspect-ip|inspect-asn|stats|release-notes|update-readme-stats|version>")
 	}
 	switch args[0] {
 	case "build":
@@ -104,6 +105,23 @@ func run(args []string) error {
 			return err
 		}
 		return printValue(opts.Format, md.Summary)
+	case "release-notes":
+		fs, opts := commonFlagSet("release-notes")
+		outputPath := fs.String("release-notes", "", "Release notes output path")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		if *outputPath == "" {
+			*outputPath = filepath.Join(opts.OutDir, "release-notes.md")
+		}
+		return release.WriteReleaseNotes(opts.OutDir, *outputPath)
+	case "update-readme-stats":
+		fs, opts := commonFlagSet("update-readme-stats")
+		readmePath := fs.String("readme", "README.md", "README path")
+		if err := fs.Parse(args[1:]); err != nil {
+			return err
+		}
+		return release.UpdateREADME(opts.OutDir, *readmePath)
 	case "version":
 		fmt.Printf("asnforge %s commit=%s date=%s\n", version.Version, version.Commit, version.Date)
 		return nil
