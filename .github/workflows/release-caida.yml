@@ -5,6 +5,10 @@ on:
   schedule:
     - cron: "40 4 8 * *"
 
+concurrency:
+  group: asnforge-release-publish-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   release-caida:
     runs-on: ubuntu-latest
@@ -24,15 +28,16 @@ jobs:
         run: ./asnforge validate --out release/caida --strict
       - name: generate release notes
         run: ./asnforge release-notes --out release/caida --release-notes release/caida/release-notes.md
-      - name: update README release stats
-        run: ./asnforge update-readme-stats --out release/caida --readme README.md
       - name: commit README release stats
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          ./asnforge update-readme-stats --out release/caida --readme README.md
           git add README.md
           git diff --cached --quiet || git commit -m "Update latest ASNForge CAIDA release stats [skip ci]"
-          git push
+          git push origin "HEAD:$GITHUB_REF_NAME"
       - name: compute release tag
         id: tag
         run: echo "tag=research-caida-$(date -u +%Y%m%d-%H%M%SZ)" >> "$GITHUB_OUTPUT"
