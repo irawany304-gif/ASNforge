@@ -22,6 +22,17 @@ jobs:
         run: ./asnforge build --config config/research-caida.yaml --out release/caida
       - name: validate CAIDA research artifacts
         run: ./asnforge validate --out release/caida --strict
+      - name: generate release notes
+        run: ./asnforge release-notes --out release/caida --release-notes release/caida/release-notes.md
+      - name: update README release stats
+        run: ./asnforge update-readme-stats --out release/caida --readme README.md
+      - name: commit README release stats
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git diff --cached --quiet || git commit -m "Update latest ASNForge CAIDA release stats [skip ci]"
+          git push
       - name: compute release tag
         id: tag
         run: echo "tag=research-caida-$(date -u +%Y%m%d-%H%M%SZ)" >> "$GITHUB_OUTPUT"
@@ -30,6 +41,7 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.tag }}
           prerelease: true
+          body_path: release/caida/release-notes.md
           files: |
             release/caida/asnforge.mmdb.gz
             release/caida/asnforge-asn.jsonl.gz
@@ -39,5 +51,6 @@ jobs:
             release/caida/metadata.json
             release/caida/checksums.txt
             release/caida/quality-report.md
+            release/caida/release-notes.md
             release/caida/asnforge-diff.json
             release/caida/manifest.json
