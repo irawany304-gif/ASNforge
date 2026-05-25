@@ -17,6 +17,71 @@ ASNForge builds reproducible ASN and prefix-origin intelligence artifacts for IP
 
 ---
 
+
+<!-- ASNFORGE:RELEASE-STATS BEGIN -->
+## Latest Release Stats
+
+| Field | Value |
+| --- | ---: |
+| Build ID | `20260525-081859Z` |
+| Profile | `public-safe` |
+| Generated | `2026-05-25T08:18:59Z` |
+| Quality | `PASS` |
+| ASN profiles | 137,473 |
+| Named ASN profiles | 120,775 |
+| Prefixes | 1,447,652 |
+| MMDB inserted prefixes | 1,447,652 |
+| MOAS prefixes | 14,589 |
+| Private ASN records | 200 |
+| Reserved ASN records | 28 |
+| Unknown type ASNs | 123,406 |
+| Build duration seconds | 62.13 |
+
+## Sources
+
+| Name | URL | Size | SHA256 |
+| --- | --- | ---: | --- |
+| `afrinic` | [delegated-afrinic-extended-latest](https://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest) | 976,819 | `1444ac65c7c3` |
+| `apnic` | [delegated-apnic-extended-latest](https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest) | 8,942,658 | `ea3b22ce1282` |
+| `arin` | [delegated-arin-extended-latest](https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest) | 12,802,696 | `945a9a8a9cbb` |
+| `lacnic` | [delegated-lacnic-extended-latest](https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest) | 4,508,976 | `c96da8ec6bdb` |
+| `ripe` | [delegated-ripencc-extended-latest](https://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest) | 17,857,762 | `c41f3fd467e8` |
+| `ed2d58969c8c-table.jsonl` | [table.jsonl](https://bgp.tools/table.jsonl) | 74,737,521 | `59bbae2f225f` |
+| `asn_catalog` | [asns.csv](https://bgp.tools/asns.csv) | 5,512,379 | `af6cbce76ffc` |
+| `asn_signals` | [asn-signals.csv](https://raw.githubusercontent.com/ipanalytics/IP-Knowledge-Layer/main/data/current/asn-signals.csv) | 119 | `f27bb5dba8a1` |
+| `asn_signals` | [asn-signals.csv](https://raw.githubusercontent.com/ipanalytics/ASN-Signal-Graph/main/data/current/asn-signals.csv) | 607,980 | `8185705bddfa` |
+
+## Artifacts
+
+| Artifact | Size | Records |
+| --- | ---: | ---: |
+| `asnforge-asn.csv.gz` | 2,828,794 | 137,473 |
+| `asnforge-asn.jsonl.gz` | 3,580,577 | 137,473 |
+| `asnforge-diff.json` | 224 | - |
+| `asnforge-prefixes.csv.gz` | 8,837,401 | 1,447,652 |
+| `asnforge-prefixes.jsonl.gz` | 10,737,358 | 1,447,652 |
+| `asnforge.mmdb.gz` | 6,077,413 | 1,447,652 |
+| `manifest.json` | 3,719 | - |
+| `quality-report.md` | 2,664 | - |
+
+## Numeric Diff
+
+| Metric | Value |
+| --- | ---: |
+| `baseline` | true |
+| `new_asns` | 0 |
+| `removed_asns` | 0 |
+| `changed_asn_profiles` | 0 |
+| `new_prefixes` | 0 |
+| `removed_prefixes` | 0 |
+| `changed_prefix_origins` | 0 |
+| `new_moas_prefixes` | 0 |
+| `resolved_moas_prefixes` | 0 |
+
+## Quality
+
+No warnings or errors.
+<!-- ASNFORGE:RELEASE-STATS END -->
 ## Overview
 
 ASNForge is a local compiler for ASN profile and prefix-origin datasets. It is designed for teams that need deterministic, inspectable artifacts instead of ad hoc enrichment files assembled by scripts.
