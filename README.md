@@ -3,7 +3,7 @@
 ASNForge builds reproducible ASN and prefix-origin intelligence artifacts for IP enrichment, routing analytics, and security data pipelines. It compiles public registry and routing inputs into a compact IP-to-ASN MaxMind DB, canonical ASN tables, prefix-origin snapshots, build metadata, checksums, and release-ready archives.
 
 <p align="center">
-  <img src="./site/banner.svg" alt="ASNForge routing and registry intelligence compiler" width="100%">
+  <img src="./site/banner.png" alt="ASNForge routing and registry intelligence compiler" width="100%">
 </p>
 
 <p align="center">
